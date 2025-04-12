@@ -43,7 +43,8 @@ const LoginPageTemplate = () => {
   useEffect(() => {
     // URL에 user 파라미터가 없고, member 정보가 있는 경우에만 리다이렉트
     if (member && !searchParams.get('user')) {
-      router.push('/');
+      // router.push('/');
+      window.location.href = '/';
     }
   }, [member, router, searchParams]);
 
