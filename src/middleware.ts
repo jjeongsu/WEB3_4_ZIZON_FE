@@ -35,6 +35,7 @@ export async function middleware(request: NextRequest) {
   // const token = request.cookies.get('accessToken')
   // cookieStore.get('accessToken')?.value; // 쿠키에서 accessToken 가져오기
   let requestToken: string | undefined;
+
   if(request.cookies.get('accessToken') === undefined) {
     requestToken = undefined;
   } else {
