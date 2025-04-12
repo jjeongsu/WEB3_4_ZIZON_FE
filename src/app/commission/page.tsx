@@ -8,7 +8,7 @@ export default function CommissionPage() {
   const [searchBar, setSearchBar] = React.useState<string>('');
   const [scrollHookRef, setScrollHookRef] = React.useState<null | HTMLDivElement>(null);
   const [commissionList, setCommissionList] = React.useState<ProjectType[]>([]);
-  const [page, setPage] = React.useState<number>(1);
+  const [page, setPage] = React.useState<number>(0);
   const [category, setCategory] = React.useState<number>(0);
   const [hasMore, setHasMore] = React.useState(true);
 
