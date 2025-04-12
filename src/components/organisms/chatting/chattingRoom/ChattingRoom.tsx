@@ -92,8 +92,11 @@ export default function ChattingRoom({
   };
   // 메세지가 추가될 때 스크롤을 항상 아래로 이동
   const scrollToBottom = () => {
+    // if (messagesEndRef.current) {
+    //   messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    // }
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   };
   useEffect(() => {
@@ -186,7 +189,10 @@ export default function ChattingRoom({
       </Suspense>
       <div className="w-full flex-col min-w-690 max-w-828">
         {/* 채팅화면 */}
-        <div className="w-full flex flex-col gap-32 bg-black1 px-32 py-32 rounded-[8px] h-745 overflow-y-scroll mb-16">
+        <div
+          className="w-full flex flex-col gap-32 bg-black1 px-32 py-32 rounded-[8px] h-745 overflow-y-scroll mb-16"
+          ref={messagesEndRef}
+        >
           {messages &&
             messages.map(message => (
               <MessageTemplate
@@ -196,7 +202,7 @@ export default function ChattingRoom({
                 tag={message.sender === senderEmail ? 'get' : 'send'}
               />
             ))}
-          <div ref={messagesEndRef} />
+          {/* <div ref={messagesEndRef} /> */}
         </div>
         {/* 채팅입력 */}
         <div className="w-full flex flex-col gap-10">
