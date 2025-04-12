@@ -17,7 +17,7 @@ export default async function getChatHistory(roomId: string): Promise<MessageTyp
   const [sender, receiver] = senderReceiverPart.split(':'); // sender와 receiver 분리
 
   const response = await APIBuilder.get(
-    `/chatrooms/history?sender=${encodeURIComponent(sender)}&receiver=${encodeURIComponent(
+    `/chatrooms?sender=${encodeURIComponent(sender)}&receiver=${encodeURIComponent(
       receiver,
     )}&projectId=${projectId}`,
   )

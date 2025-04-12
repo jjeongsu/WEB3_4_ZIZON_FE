@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 interface ChattingListProps {
   chatRoomList: GetRoomsResponse;
-  handleRoomChange: (roomId: string, projectId: number, userId: number, receiver: string) => void;
+  handleRoomChange: (roomId: string, projectId: number, expertId: number, receiver: string) => void;
   room: string | null; // 선택된 채팅방 id
 }
 
@@ -57,7 +57,7 @@ export default function ChattingList({ chatRoomList, handleRoomChange, room }: C
             userProfile={item.otherUserProfile}
             isSelected={room === item.roomId}
             onClick={() =>
-              handleRoomChange(item.roomId, item.projectId, item.otherUserId, item.receiver)
+              handleRoomChange(item.roomId, item.projectId, item.expertId, item.receiver)
             }
           />
         ))}

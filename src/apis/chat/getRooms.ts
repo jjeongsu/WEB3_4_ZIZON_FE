@@ -3,16 +3,17 @@ import { decodeToken } from '@/utils/decodeToken';
 import { cookies } from 'next/headers';
 
 interface RoomType {
-  roomId: 'test3@test.com:한민@kakao.com';
-  sender: 'test3@test.com';
-  receiver: '한민@kakao.com';
-  lastMessage: 'ㅂㅈㄷ';
-  lastMessageTime: '2025-04-08T12:43:51';
-  unreadCount: 5;
-  projectId: 34;
-  otherUserName: '한민';
-  otherUserProfile: 'https://devcouse4-team16-bucket.s3.ap-northeast-2.amazonaws.com/projects/1/project_image.jpg';
-  otherUserId: 12;
+  roomId: string;
+  sender: string;
+  receiver: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
+  projectId: number;
+  otherUserName: string;
+  otherUserProfile: string;
+  otherUserId: number;
+  expertId: number;
 }
 
 export type GetRoomsResponse = RoomType[];

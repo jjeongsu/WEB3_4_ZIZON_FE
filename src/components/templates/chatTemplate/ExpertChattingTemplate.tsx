@@ -23,14 +23,17 @@ export default function ExpertChattingTemplate({
   const { data: projectData, isLoading: isLoadingProject } = useQuery({
     queryKey: ['project', projectId],
     queryFn: () => getProjectInClient({ projectId: String(projectId) }),
+    throwOnError: true,
     enabled: !!projectId,
   });
 
   const { data: offerData, isLoading: isLoadingOffer } = useQuery({
-    queryKey: ['offer', projectId],
+    queryKey: ['offer', projectId, expertId],
     queryFn: () => getOfferList({ projectId: projectId!, expertId: expertId! }),
     enabled: !!projectId,
   });
+
+  // offerData가 없다면, offer를 생성하는 버튼을 연결시켜줘야함.ㄴ
 
   return (
     <div className="flex gap-24 mt-46 items-start jusitfy-center w-1670">
