@@ -19,7 +19,7 @@ export default function ModalContainer({ open, children }: ModalProps) {
     <>
       {open ? (
         // 모달 컨테이너
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black/50">
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black/50 z-20">
           {/* 모달 내용 */}
           <div>{children}</div>
         </div>
