@@ -7,8 +7,8 @@ export interface Order {
   productType: 'PHYSICAL' | 'DIGITAL';
   productThumbnail: string;
   productTitle: string;
-  productPrice: number;
-  quantity: number;
+  productPrice: string | number;
+  quantity: string | number;
   totalPrice: number;
   status: 'PAID' | 'PREPARING' | 'SHIPPING' | 'DELIVERED' | 'CANCELLED';
   paymentMethod: string;
@@ -16,10 +16,9 @@ export interface Order {
   digitalContent: DigitalContent[];
 }
 
-export interface OrderPageResponse {
+export interface PurchasedProductsResponseType {
   content: Order[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
+  currentPage: number;
+  pageSize: number;
+  hasNext: boolean;
 }
