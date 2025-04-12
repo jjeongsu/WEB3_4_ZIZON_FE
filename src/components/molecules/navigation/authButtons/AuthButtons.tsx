@@ -65,12 +65,17 @@ export default function AuthButtons({
   if (isLoggedIn && member) {
     return (
       <div className="relative flex items-center gap-32">
-        <Link href="/" className="block">
+        <Link href={userRole === 'client' ? '/client/chat' : '/expert/chat'} className="block">
           <Image src="/icons/ChatBubbleLeftEllipsisLine.svg" alt="chat" width={26} height={22} />
         </Link>
-        <Link href="/" className="block">
+        <button
+          className="relative cursor-pointer"
+          onClick={() => {
+            alert('준비중인 기능입니다.');
+          }}
+        >
           <Image src="/icons/HeroiconsOutline.svg" alt="bell" width={20} height={20} />
-        </Link>
+        </button>
         <div
           ref={dropdownRef}
           className="relative"

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
 import { decodeToken } from './utils/decodeToken';
+import { cookies } from 'next/headers';
 
 // 라우터의 모든 경로에 middleware를 적용
 export const config = {
@@ -25,15 +25,26 @@ const protectedRoutes = [
   '/expert/make-offer',
 ]; // 로그인 정보가 있어야 접근 가능한 페이지
 const publicRoutes = ['/login', '/signup']; // 로그인시 접근 불가능한 페이지
-
 const expertOnlyRoutes = ['/store/products/register', '/expert/chat', '/expert/make-offer'];
 const clientOnlyRoutes = ['/expert/register', '/client/chat'];
 
 export async function middleware(request: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get('accessToken')?.value; // 쿠키에서 accessToken 가져오기
+  // const cookieStore = await cookies();
+  // const token = request.cookies.get('accessToken')
+  // cookieStore.get('accessToken')?.value; // 쿠키에서 accessToken 가져오기
+  let requestToken: string | undefined;
 
+  if(request.cookies.get('accessToken') === undefined) {
+    requestToken = undefined;
+  } else {
+    requestToken = request.cookies.get('accessToken')?.value
+  }
+  console.log("requestToken -> ", requestToken);
+  console.log('All cookies:', request.cookies.getAll());
   const currentPathname = request.nextUrl.pathname;
+
 
   // 현재 경로가 protectedRoutes의 하위경로인지 확인
   const underProtectedRoutes = protectedRoutes.some(route => currentPathname.startsWith(route));
