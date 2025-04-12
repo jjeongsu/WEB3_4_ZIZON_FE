@@ -8,6 +8,7 @@ import { postProject } from '@/apis/project/postProject';
 import { getCommissionCategory } from '@/utils/getCommissionCategory';
 import { postChatRooms } from '@/apis/chat/postChatRooms';
 import postChatRoomWithExpert from '@/apis/chat/postChatRoomWithExpert';
+import deleteCookie from '@/utils/deleteCookie';
 
 export default function CommonEndPage() {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(new Date());
@@ -75,10 +76,6 @@ export default function CommonEndPage() {
       expertId: targetExpertId ? Number(targetExpertId) : null,
     };
 
-    // if (targetExpertId) {
-    //   console.log(targetExpertId);
-    //   requestBody.expertId = targetExpertId;
-    // }
     const response = await postProject(requestBody);
 
     if (targetExpertId) {
@@ -93,6 +90,8 @@ export default function CommonEndPage() {
         alert('채팅방 생성 실패');
         console.error(error);
         router.push(`/commission/${response.projectId}`);
+      } finally {
+        deleteCookie('target_expert_id');
       }
     }
   };
