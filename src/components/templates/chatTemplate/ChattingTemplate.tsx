@@ -5,11 +5,12 @@ import { getExpert } from '@/apis/expert/getExpert';
 import getOfferList from '@/apis/offer/getOffer';
 import ClientChattingInfo from '@/components/organisms/chatting/chattingInfo/client/ClientChattingInfo';
 import ChattingRoom from '@/components/organisms/chatting/chattingRoom/ChattingRoom';
+import { CHATTING_STATE } from '@/constants/chat';
 import { useUserStore } from '@/store/userStore';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-
-type ChatRoomType = 'all' | 'unread' | 'waiting';
+import ChattingLoadingSkeleton from './ChattingLoadingSkeleton';
+export type ChatRoomType = 'all' | 'unread' | 'waiting';
 
 export default function ChattingTemplate() {
   const member = useUserStore(state => state.member);
@@ -43,10 +44,6 @@ export default function ChattingTemplate() {
     enabled: !!projectId && !!expertId,
   });
 
-  if (isLoadingRooms) {
-    return <div className="flex justify-center items-center w-full h-full">Loading...</div>;
-  }
-
   const handleFilterChange = (filter: ChatRoomType) => {
     setRoomFilter(filter);
   };
@@ -59,6 +56,9 @@ export default function ChattingTemplate() {
     return true;
   });
 
+  if (isLoadingRooms) {
+    return <ChattingLoadingSkeleton />;
+  }
   return (
     <div className="flex gap-24 mt-46 items-start jusitfy-center w-1670">
       <ChattingRoom
