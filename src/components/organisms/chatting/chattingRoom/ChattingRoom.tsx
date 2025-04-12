@@ -18,6 +18,7 @@ interface ChattingRoomProps {
   setProjectId: (projectId: number | null) => void;
   setExpertId?: (expertId: number | null) => void;
   chatRoomList: GetRoomsResponse;
+  handleFilterChange?: (filter: string) => void; // 필터 변경 핸들러
 }
 
 export default function ChattingRoom({
@@ -26,6 +27,7 @@ export default function ChattingRoom({
   setProjectId,
   setExpertId,
   chatRoomList,
+  handleFilterChange,
 }: ChattingRoomProps) {
   //현재 대화방 사용자 정보
   const member = useUserStore(state => state.member);
@@ -179,6 +181,7 @@ export default function ChattingRoom({
           chatRoomList={chatRoomList}
           handleRoomChange={handleRoomChange}
           room={roomId}
+          handleFilterChange={handleFilterChange}
         />
       </Suspense>
       <div className="w-full flex-col min-w-690 max-w-828">
