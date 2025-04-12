@@ -36,7 +36,7 @@ export const postProject = async ({
     deadline,
     expertId,
   };
-  console.log('bodyForm', bodyForm);
+
   const response = await APIBuilder.post('/projects', { ...bodyForm })
     .headers({
       'Content-Type': 'application/json',
