@@ -17,8 +17,8 @@ function DesktopNavigation() {
       try {
         const userData = await getCurrentUser();
         setMember({
-          ...member,
           ...userData,
+          ...member,
         });
       } catch (error) {
         console.log(error);

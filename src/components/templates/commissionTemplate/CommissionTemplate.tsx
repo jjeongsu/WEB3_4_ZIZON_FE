@@ -77,8 +77,8 @@ export default function CommissionTemplate({
         </aside>
         <section className="grid grid-cols-1 gap-32">
           <div className="grid grid-cols-1 gap-32">
-            {filteredList.map(item => (
-              <CommissionListItem key={`${item.id}-${new Date().getTime()}`} {...item} />
+            {filteredList.map((item, index) => (
+              <CommissionListItem key={`${item.id}-${index}`} {...item} />
             ))}
           </div>
           {ScrollHookRef}
