@@ -30,9 +30,9 @@ export default function CommissionPage() {
 
   useEffect(() => {
     // 카테고리 변경 시 새로 불러오기
-    setPage(1);
+    setPage(0);
     setHasMore(true);
-    fetchProjects(1, true);
+    fetchProjects(0, true);
   }, [category]);
 
   const categoryClickHandler = (value: number) => {
