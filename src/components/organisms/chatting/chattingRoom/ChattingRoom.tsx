@@ -27,12 +27,13 @@ export default function ChattingRoom({
   setExpertId,
   chatRoomList,
 }: ChattingRoomProps) {
-  //현재 대화방 사용자 정보 // memberInfo가 빠져버림 ㅠㅠ
-  //const { memberInfo: currentUser } = useUserData();
+  //현재 대화방 사용자 정보
   const member = useUserStore(state => state.member);
-  const currentUserEmail = member?.email;
-  const [senderEmail, receiver] = roomId?.split(':') || []; // sender, receiver
-  const receiverEmail = senderEmail === currentUserEmail ? receiver : senderEmail; // 상대방 이메일
+  const currentUserEmail = member?.email || ''; // 현재 사용자의 이메일
+  const [projectId, senderReceiverPart] = roomId?.split('|') || []; // sender, receiver
+  const [sender, receiver] = senderReceiverPart?.split(':') || []; // sender와 receiver 분리
+  const senderEmail = currentUserEmail; // 현재 사용자의 이메일
+  const receiverEmail = sender === currentUserEmail ? receiver : sender; // 상대방 이메일
   // 채팅방 관련 변수
   const [messages, setMessages] = useState<any[]>([]); // 메시지 상태 관리
   const [input, setInput] = useState<string>(''); // 입력 상태 관리
@@ -44,19 +45,12 @@ export default function ChattingRoom({
   const chatSubscriptionRef = useRef<any>(null);
   const readSubscriptionRef = useRef<any>(null);
 
-  // 로깅 ===================================
-  //console.log('chatRoomList', chatRoomList);
-  //console.log('member', member);
-
   // 1. 채팅방 메세지 내역 로딩 (리팩토링)
   const fetchChatHistory = async (roomId: string) => {
-    if (!currentUserEmail) return;
-    const sender = currentUserEmail;
-    const parts = roomId.split(':');
-    const receiver = parts[0] === sender ? parts[1] : parts[0];
+    if (!roomId) return;
     try {
       const response = await getChatHistory(roomId);
-      console.log('채팅 기록', response);
+
       setMessages(response);
     } catch (error) {
       console.error('Error fetching chat history:', error);
@@ -68,13 +62,13 @@ export default function ChattingRoom({
     const socket = new SockJS('http://localhost:8080/ws-chat');
     const stompClient = Stomp.over(socket);
     stompClient.debug = (str: string) => {
-      //console.log('🐛 STOMP Debug:', str);
+      console.log('🐛 STOMP Debug:', str);
     };
     stompClient.connect(
       {},
       (frame: any) => {
-        //console.log('STOMP 연결 성공', frame);
-        stompClient.subscribe(`/topic/notice/${currentUserEmail}`, (messageOutput: any) => {
+        console.log('STOMP 연결 성공', frame);
+        stompClient.subscribe(`/topic/notice/${senderEmail}`, (messageOutput: any) => {
           const payload = JSON.parse(messageOutput.body);
           //console.log('Received message:', messageOutput);
           const roomId = payload.roomId;
@@ -105,7 +99,12 @@ export default function ChattingRoom({
   }, [messages]);
 
   // 채팅방 변경 시 처리
-  const handleRoomChange = (room: string, projectId: number, userId: number, receiver: string) => {
+  const handleRoomChange = (
+    room: string,
+    projectId: number,
+    expertId: number,
+    receiver: string,
+  ) => {
     // 이전 구독 해제
     if (chatSubscriptionRef.current) {
       chatSubscriptionRef.current.unsubscribe();
@@ -117,7 +116,7 @@ export default function ChattingRoom({
     }
     setRoom(room);
     setProjectId(projectId);
-    setExpertId && setExpertId(userId);
+    setExpertId && setExpertId(expertId);
     fetchChatHistory(room); // 채팅 내역 로딩
 
     // 채팅방 메세지 구독
@@ -144,14 +143,23 @@ export default function ChattingRoom({
       alert('메시지 내용 또는 이미지를 선택하세요.');
       return;
     }
-    if (!currentUserEmail) return;
+    if (!member) {
+      alert('로그인 후 사용가능합니다.');
+      return;
+    }
+    if (!stompClientRef.current || !stompClientRef.current.connected) {
+      alert('서버와 연결이 끊어졌습니다. 새로고침 후 다시 시도해주세요.');
+      return;
+    }
+
     const chatMessage = {
-      sender: currentUserEmail,
+      sender: senderEmail,
       receiver: receiverEmail,
-      content: text,
-      fileUrl: null,
+      projectId: projectId,
+      content: text, // 파일이면 여기가 null
+      fileUrl: null, // 여기에 url
     };
-    //console.log('[sendMessage] Sending chatMessage:', chatMessage);
+
     if (stompClientRef.current) {
       stompClientRef.current.send('/app/chat.send', {}, JSON.stringify(chatMessage));
     }
@@ -159,10 +167,10 @@ export default function ChattingRoom({
     //setHiddenFileUrl('');
   };
   useEffect(() => {
-    if (currentUserEmail) {
+    if (senderEmail) {
       connectWebSocket();
     }
-  }, [roomId, currentUserEmail]);
+  }, [roomId, member]);
 
   return (
     <div className="flex gap-24 items-start">
@@ -182,7 +190,7 @@ export default function ChattingRoom({
                 key={`${message.timestamp}-${message.content}`}
                 dateTime={new Date(message.timestamp)}
                 message={message.content}
-                tag={message.sender === currentUserEmail ? 'get' : 'send'}
+                tag={message.sender === senderEmail ? 'get' : 'send'}
               />
             ))}
           <div ref={messagesEndRef} />
