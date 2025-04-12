@@ -40,7 +40,7 @@ export default function ChatListItem({
       )}
       {/* 프로필 이미지*/}
       <Image
-        src={userProfile}
+        src={userProfile || '/images/DefaultImage.png'}
         width={40}
         height={40}
         alt="user-profile-image"
