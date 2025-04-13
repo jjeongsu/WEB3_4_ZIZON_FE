@@ -15,11 +15,19 @@ export default async function getMyPurchasedProducts({
     size,
   };
 
-  const response = await APIBuilder.get('users/my-purchased-products')
-    .params(params)
-    .timeout(10000)
-    .build()
-    .call<PurchasedProductsResponseType>();
+  try {
+    console.log('API 요청 시작:', { page, size });
 
-  return response.data;
+    const response = await APIBuilder.get('/users/my-purchased-products')
+      .params(params)
+      .timeout(10000)
+      .build()
+      .call<PurchasedProductsResponseType>();
+
+    console.log('API 응답 성공:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('API 요청 실패:', error);
+    throw error;
+  }
 }

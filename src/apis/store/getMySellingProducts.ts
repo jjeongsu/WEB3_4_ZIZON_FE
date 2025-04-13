@@ -15,7 +15,7 @@ export default async function getMySellingProducts({
     size,
   };
 
-  const response = await APIBuilder.get('users/my-selling-products')
+  const response = await APIBuilder.get('/users/my-selling-products')
     .params(params)
     .timeout(10000)
     .build()
