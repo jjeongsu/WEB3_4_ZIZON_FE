@@ -77,6 +77,7 @@ export default function ExpertChattingTemplate() {
         offerData={offerData}
         service={service}
         expertId={expertId}
+        roomId={room}
       />
     </div>
   );

@@ -24,7 +24,14 @@ export default function ExpertChattingInfo({
   roomId,
 }: ExpertChattingInfoProps) {
   if (!projectData) {
-    return <div>채팅방을 선택하세요</div>;
+    return (
+      <div className="w-full max-w-402 flex flex-col gap-16 bg-black1 rounded-sm">
+        <div className="w-full h-400 flex flex-col items-center justify-center">
+          <p className="text-16 text-gray-500">채팅 목록에서 견적을 협상중인 </p> <br />
+          <p className="text-16 text-gray-500">의뢰인을 선택해주세요.</p>
+        </div>
+      </div>
+    );
   }
   const member = useUserStore(state => state.member);
   const currentUserEmail = member?.email || ''; // 현재 사용자의 이메일

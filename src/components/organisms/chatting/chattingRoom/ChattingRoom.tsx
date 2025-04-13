@@ -12,6 +12,11 @@ import { GetRoomsResponse } from '@/apis/chat/getRooms';
 import getChatHistory from '@/apis/chat/getChatHistory';
 import FileInput from '@/components/atoms/inputs/fileInput/FileInput';
 import { useUserStore } from '@/store/userStore';
+import FilePreview from '@/components/atoms/filePreview/FilePreview';
+import { putFileUpload } from '@/apis/imageUpload/putFileUpload';
+import { getMimeType } from '@/utils/getMimeType';
+import { postImageUpload } from '@/apis/imageUpload/modules/postImageUpload';
+import { useQueryClient } from '@tanstack/react-query';
 interface ChattingRoomProps {
   roomId: string | null;
   setRoom: (roomId: string | null) => void;
@@ -39,9 +44,11 @@ export default function ChattingRoom({
   // 채팅방 관련 변수
   const [messages, setMessages] = useState<any[]>([]); // 메시지 상태 관리
   const [input, setInput] = useState<string>(''); // 입력 상태 관리
+  const [file, setFile] = useState<File | null>(null); // 파일 이름 상태 관리
+  const [fileUrl, setFileUrl] = useState<string>(''); // 파일 URL 상태 관리
   const messagesEndRef = useRef<HTMLDivElement>(null); // 스크롤을 위한 ref
-  const [isLoadingHis, setIsLoadingHis] = useState(false); // 로딩 상태 관리
 
+  const queryClient = useQueryClient();
   // WebSocket 관련 참조
   const stompClientRef = useRef<any>(null);
   const chatSubscriptionRef = useRef<any>(null);
@@ -99,9 +106,42 @@ export default function ChattingRoom({
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   };
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+
+  // 이미지 업로드 처리
+  const handlefileChange = async (file: File) => {
+    if (!file) {
+      alert('파일을 선택하세요.');
+      return;
+    }
+    let fileUrl;
+    if (file) {
+      const extension = file.name.split('.').pop();
+      const contentType = getMimeType(extension); // image/png
+      const postImageUploadResponse = await postImageUpload({
+        folder: 'chating',
+        fileName: file.name,
+        contentType: contentType,
+      });
+
+      const { presignedUrl, accessUrl } = postImageUploadResponse;
+
+      const uploadResponse = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': contentType,
+        },
+      });
+
+      if (!uploadResponse.ok) {
+        alert('파일 업로드에 실패했습니다.');
+        return;
+      }
+      setFileUrl(accessUrl);
+    }
+    console.log('파일이 제출되었습니다.', file.size);
+    setFile(file);
+  };
 
   // 채팅방 변경 시 처리
   const handleRoomChange = (
@@ -136,15 +176,33 @@ export default function ChattingRoom({
     }
   };
 
+  const markRoomRead = async (roomId: string) => {
+    if (!roomId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:8080/chatrooms/${roomId}/read?username=${encodeURIComponent(
+          currentUserEmail,
+        )}`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
+      const text = await response.text();
+    } catch (error) {
+      console.error('Error marking room as read:', error);
+    }
+  };
+
   // 메시지 전송 함수
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!roomId) {
       alert('채팅방을 선택하세요.');
       return;
     }
     const text = input.trim();
-    //const fileUrl = hiddenFileUrl;
-    if (!text) {
+
+    if (!text && !fileUrl) {
       alert('메시지 내용 또는 이미지를 선택하세요.');
       return;
     }
@@ -156,27 +214,52 @@ export default function ChattingRoom({
       alert('서버와 연결이 끊어졌습니다. 새로고침 후 다시 시도해주세요.');
       return;
     }
+    let chatMessage;
+    if (input) {
+      chatMessage = {
+        sender: senderEmail,
+        receiver: receiverEmail,
+        projectId: projectId,
+        content: text,
+        fileUrl: null,
+      };
+    }
 
-    const chatMessage = {
-      sender: senderEmail,
-      receiver: receiverEmail,
-      projectId: projectId,
-      content: text, // 파일이면 여기가 null
-      fileUrl: null, // 여기에 url
-    };
+    let fileMessage;
+    if (fileUrl) {
+      fileMessage = {
+        sender: senderEmail,
+        receiver: receiverEmail,
+        projectId: projectId,
+        content: null, // 파일이면 여기가 null
+        fileUrl: fileUrl, // 여기에 url
+      };
+    }
 
     if (stompClientRef.current) {
-      stompClientRef.current.send('/app/chat.send', {}, JSON.stringify(chatMessage));
+      if (chatMessage) {
+        stompClientRef.current.send('/app/chat.send', {}, JSON.stringify(chatMessage));
+      }
+      if (fileMessage) {
+        console.log('파일메세지:', fileMessage);
+        stompClientRef.current.send('/app/chat.send', {}, JSON.stringify(fileMessage));
+      }
     }
     setInput('');
-    //setHiddenFileUrl('');
+    setFile(null);
+    setFileUrl(''); // 파일 URL 초기화
   };
   useEffect(() => {
     if (senderEmail) {
       connectWebSocket();
+      markRoomRead(roomId!); // 채팅방 읽음 처리
+      queryClient.invalidateQueries({ queryKey: ['chatRoomList'] });
     }
   }, [roomId, member]);
-
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  console.log('roomId,', roomId);
   return (
     <div className="flex gap-24 items-start">
       <Suspense>
@@ -200,10 +283,12 @@ export default function ChattingRoom({
                 dateTime={new Date(message.timestamp)}
                 message={message.content}
                 tag={message.sender === senderEmail ? 'get' : 'send'}
+                fileUrl={message.fileUrl}
               />
             ))}
-          {/* <div ref={messagesEndRef} /> */}
         </div>
+        {/* 파일 이름 */}
+        {file && <FilePreview file={file} onDelete={() => setFile(null)} />}
         {/* 채팅입력 */}
         <div className="w-full flex flex-col gap-10">
           <TextInput
@@ -219,13 +304,10 @@ export default function ChattingRoom({
           {/* 채팅 전송 */}
           <div className="flex justify-between items-center">
             <FileInput
-              label="첨부파일"
+              label="이미지업로드"
               name="file-input"
-              accept="image/*, .pdf, .docx"
-              onChange={(file: File) => {
-                // setFile(file);
-                // //console.log('첨부파일:', file);
-              }}
+              accept="image/*"
+              onChange={handlefileChange}
             />
             <StandardButton
               text="전송"
