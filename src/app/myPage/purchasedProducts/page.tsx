@@ -45,7 +45,7 @@ export default function PurchasedProductsPage() {
     );
   }
 
-  const orders = data?.content || [];
+  const orders = data?.orders || [];
   const hasNext = data?.hasNext || false;
 
   return (

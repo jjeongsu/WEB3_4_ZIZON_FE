@@ -54,9 +54,7 @@ export default function MyProjectPage() {
   // 상태별 프로젝트 수 계산
   const counts = useMemo(() => {
     return {
-      inProgress: allProjects.filter(
-        project => project.status === 'OPEN' || project.status === 'IN_PROGRESS',
-      ).length,
+      inProgress: allProjects.filter(project => project.status === 'IN_PROGRESS').length,
       cancelled: allProjects.filter(project => project.status === 'CANCELLED').length,
       completed: allProjects.filter(project => project.status === 'COMPLETED').length,
     };
