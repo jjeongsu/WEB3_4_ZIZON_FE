@@ -19,7 +19,7 @@ export default function DigitalContentList({ digitalContent }: DigitalContentLis
               {(content.fileSize / 1024 / 1024).toFixed(1)}MB • {content.fileType}
             </p>
           </div>
-          <button className="text-13 font-medium px-12 py-8 bg-black10 text-black1 rounded-sm">
+          <button className="text-13 font-medium px-12 py-8 bg-black10 text-black1 rounded-sm cursor-pointer">
             다운로드
           </button>
         </div>
