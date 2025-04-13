@@ -3,11 +3,18 @@ import Image from 'next/image';
 
 interface MessageTemplateProps {
   dateTime: Date;
-  message: string;
+  message?: string;
   tag: 'get' | 'send';
   senderProfileImage?: string;
+  fileUrl?: string;
 }
-function MessageTemplate({ dateTime, message, tag, senderProfileImage }: MessageTemplateProps) {
+function MessageTemplate({
+  dateTime,
+  message,
+  tag,
+  senderProfileImage,
+  fileUrl,
+}: MessageTemplateProps) {
   const yearMMDD = dateTime
     .toLocaleDateString('ko-KR', {
       year: 'numeric',
@@ -53,7 +60,22 @@ function MessageTemplate({ dateTime, message, tag, senderProfileImage }: Message
             <p className="float-end">{hourMinute}</p>
           </div>
           <div className="bg-primary0 px-16 py-12 rounded-lg text-base/24 ">
-            <p className="text-black10 text-16">{message}</p>
+            {message !== null && <p className="text-black10 text-16">{message}</p>}
+            <div>{fileUrl}</div>
+            {fileUrl !== null && (
+              <div className="flex gap-8">
+                <a href={fileUrl} download className="">
+                  <p className="text-black10 text-16">자세히보기</p>
+                </a>
+                <Image
+                  className="w-150 h-150"
+                  src={fileUrl}
+                  alt="fileURL"
+                  width={100}
+                  height={100}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
