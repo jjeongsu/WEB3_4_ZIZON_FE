@@ -17,7 +17,7 @@ export interface Order {
 }
 
 export interface PurchasedProductsResponseType {
-  content: Order[];
+  orders: Order[];
   currentPage: number;
   pageSize: number;
   hasNext: boolean;
