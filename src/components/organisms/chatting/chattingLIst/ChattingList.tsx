@@ -6,7 +6,6 @@ import SmallTag from '@/components/atoms/tags/smallTag/SmallTag';
 import ChatListItem from '@/components/molecules/chatListItem/ChatListItem';
 import { CHATTING_STATE, ChattingStateType } from '@/constants/chat';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 interface ChattingListProps {
@@ -24,14 +23,10 @@ export default function ChattingList({
 }: ChattingListProps) {
   const [filter, setFilter] = useState<ChattingStateType>(CHATTING_STATE[0].state);
   const [search, setSearch] = useState<string>('');
-  const searchParams = useSearchParams();
-  const id = searchParams.get('roomId'); // 현재 선택된 채팅방 id
-  const router = useRouter();
 
-  // 현재 채팅 유저 상태 -> 전역에서 가져오는 방법 고려
-  const pathname = usePathname();
-  const userType = pathname.split('/')[1]; // client or expert
-
+  const filteredChatRoomList = chatRoomList.filter(
+    room => room.otherUserName?.includes(search) || room.lastMessage?.includes(search),
+  );
   return (
     <div className="w-402 flex flex-col gap-20 justify-end">
       {/* 필터 태그 */}
@@ -59,7 +54,7 @@ export default function ChattingList({
 
       {/* 채팅 목록 */}
       <div className="flex flex-col rounded-[8px] border-1 border-black4 overflow-x-hidden max-h-830 overfllow-y-scroll">
-        {chatRoomList.map((item, index) => (
+        {filteredChatRoomList.map((item, index) => (
           <ChatListItem
             key={index}
             chatRoomId={item.roomId}
