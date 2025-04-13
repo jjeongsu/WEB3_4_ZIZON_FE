@@ -5,22 +5,20 @@ import NumberReadability from '@/components/atoms/texts/numberReadability/Number
 import Image from 'next/image';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
 import { sellStateConfig } from '@/types/sellState';
-import { ContractStatus } from '@/types/contract';
-import { ProjectStatus } from '@/types/project';
+import { Project, ProjectStatus } from '@/types/project';
+import { Contract, ContractStatus } from '@/types/contract';
 import ReviewModal from '@/components/organisms/reviewModal/ReviewModal';
 import CancelOrderModal from '@/components/organisms/cancelOrderModal/CancelOrderModal';
 import { createReview } from '@/apis/review/createReview';
 import { cancelPayment } from '@/apis/payment/cancelPayment';
 import { toast } from 'sonner';
 
-export interface OrderListItemProps {
-  imageUrl: string;
-  price: number;
-  sellState: ProjectStatus | ContractStatus;
+type OrderItemType = Project | Contract;
+
+interface OrderListItemProps {
+  item: OrderItemType;
   onClickAskButton: () => void;
-  category: string;
   isExpertView?: boolean;
-  orderId?: number;
   expertId?: number;
   paymentOrderId?: string;
 }
@@ -58,28 +56,26 @@ const buttonStyle: Record<ProjectStatus | ContractStatus, ButtonStyle> = {
 } as const;
 
 export default function OrderListItem({
-  imageUrl,
-  price,
-  sellState,
+  item,
   onClickAskButton,
-  category,
   isExpertView = false,
-  orderId,
   expertId,
   paymentOrderId,
 }: OrderListItemProps) {
-  const [imagePath, setImagePath] = useState(imageUrl);
+  const [imagePath, setImagePath] = useState(
+    'thumbnailImageUrl' in item ? item.thumbnailImageUrl : '/images/defaultImage.png',
+  );
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  const stateConfig = sellStateConfig[sellState];
+  const stateConfig = sellStateConfig[item.status];
   const buttonConfig = isExpertView
     ? { text: '문의하기', state: 'default' as const }
-    : buttonStyle[sellState];
+    : buttonStyle[item.status];
 
   const handleButtonClick = () => {
-    if (sellState === 'COMPLETED' && !isExpertView) {
+    if (item.status === 'COMPLETED' && !isExpertView) {
       setIsReviewModalOpen(true);
-    } else if (sellState === 'CANCELLED' && !isExpertView) {
+    } else if (item.status === 'CANCELLED' && !isExpertView) {
       setIsCancelModalOpen(true);
     } else {
       onClickAskButton();
@@ -88,16 +84,17 @@ export default function OrderListItem({
 
   const handleReviewSubmit = async (review: { rating: number; content: string }) => {
     try {
-      if (!orderId || !expertId) {
-        toast.error('주문 ID 또는 전문가 ID가 없습니다.');
+      const id = 'id' in item ? item.id : item.contractId;
+      if (!id) {
+        toast.error('프로젝트 ID 또는 전문가 ID가 없습니다.');
         return;
       }
 
       await createReview({
-        review_type: 'product',
-        contract_id: null,
-        order_id: orderId,
-        expert_id: expertId,
+        reviewType: 'project',
+        contractId: 'contractId' in item ? item.contractId : null,
+        orderId: id,
+        expertId: expertId || 1,
         rating: review.rating,
         content: review.content,
       });
@@ -130,15 +127,18 @@ export default function OrderListItem({
     }
   };
 
+  const title = 'title' in item ? item.title : item.projectTitle;
+  const price = 'budget' in item ? item.budget : item.price;
+
   return (
     <>
       <article className="flex bg-black1 border border-black3 p-20 rounded-xl items-center justify-between">
         <div className="flex items-center gap-16">
           <div className="w-85 h-85 rounded-lg overflow-hidden">
             <Image
-              className={`size-full object-cover ${sellState === 'COMPLETED' && 'saturate-0'}`}
+              className={`size-full object-cover ${item.status === 'COMPLETED' && 'saturate-0'}`}
               src={imagePath === '' ? '/images/DefaultImage.png' : imagePath}
-              alt={category}
+              alt={title}
               width={85}
               height={85}
               onError={() => setImagePath('/public/images/DefaultImage.png')}
@@ -149,7 +149,7 @@ export default function OrderListItem({
               {stateConfig.label}
             </label>
             <div className="flex flex-col gap-8">
-              <span className="text-16 font-regular">{category}</span>
+              <span className="text-16 font-regular">{title}</span>
               <p className="text-16 font-semibold">
                 <NumberReadability value={price} />원
               </p>
@@ -168,13 +168,13 @@ export default function OrderListItem({
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         onSubmit={handleReviewSubmit}
-        productName={category}
+        productName={title}
       />
       <CancelOrderModal
         isOpen={isCancelModalOpen}
         onClose={() => setIsCancelModalOpen(false)}
         onConfirm={handleCancelOrder}
-        productName={category}
+        productName={title}
       />
     </>
   );
