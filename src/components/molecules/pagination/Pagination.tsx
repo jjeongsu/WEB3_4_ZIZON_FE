@@ -8,19 +8,19 @@ interface PaginationProps {
 
 export default function Pagination({ currentPage, hasNext, onPageChange }: PaginationProps) {
   return (
-    <div className="flex justify-center gap-2 mt-8">
+    <div className="flex items-center justify-center gap-16 mt-28">
       <StandardButton
         text="이전"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 0}
-        state="blue-outline"
+        state="default"
       />
       <span className="py-2 px-4">{currentPage + 1}</span>
       <StandardButton
         text="다음"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!hasNext}
-        state="blue-outline"
+        state="default"
       />
     </div>
   );
