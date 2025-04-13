@@ -11,11 +11,17 @@ import { useState } from 'react';
 
 interface ChattingListProps {
   chatRoomList: GetRoomsResponse;
-  handleRoomChange: (roomId: string, projectId: number, userId: number, receiver: string) => void;
+  handleRoomChange: (roomId: string, projectId: number, expertId: number, receiver: string) => void;
   room: string | null; // 선택된 채팅방 id
+  handleFilterChange?: (filter: string) => void; // 필터 변경 핸들러
 }
 
-export default function ChattingList({ chatRoomList, handleRoomChange, room }: ChattingListProps) {
+export default function ChattingList({
+  chatRoomList,
+  handleRoomChange,
+  room,
+  handleFilterChange,
+}: ChattingListProps) {
   const [filter, setFilter] = useState<ChattingStateType>(CHATTING_STATE[0].state);
   const [search, setSearch] = useState<string>('');
   const searchParams = useSearchParams();
@@ -31,7 +37,13 @@ export default function ChattingList({ chatRoomList, handleRoomChange, room }: C
       {/* 필터 태그 */}
       <div className="flex gap-8">
         {CHATTING_STATE.map(item => (
-          <div onClick={() => setFilter(item.state)} key={item.state}>
+          <div
+            onClick={() => {
+              handleFilterChange(item.state);
+              setFilter(item.state);
+            }}
+            key={item.state}
+          >
             <SmallTag text={item.name} theme={filter === item.state ? 'dark' : 'default'} />
           </div>
         ))}
@@ -57,8 +69,9 @@ export default function ChattingList({ chatRoomList, handleRoomChange, room }: C
             userProfile={item.otherUserProfile}
             isSelected={room === item.roomId}
             onClick={() =>
-              handleRoomChange(item.roomId, item.projectId, item.otherUserId, item.receiver)
+              handleRoomChange(item.roomId, item.projectId, item.expertId, item.receiver)
             }
+            unreadCount={item.unreadCount}
           />
         ))}
       </div>
