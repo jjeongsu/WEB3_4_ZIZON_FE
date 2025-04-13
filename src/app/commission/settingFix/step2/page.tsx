@@ -50,7 +50,7 @@ export default function SettingFixTwoPage() {
   };
 
   const onNextHandler = () => {
-    if (selectedIndex === null && selectedDay) return;
+    if (selectedIndex === null && selectedDay && address === "") return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/common/end');
   };

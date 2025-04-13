@@ -30,6 +30,7 @@ export default function CleaningTwoPage() {
     router.push('/commission/cleaning/step1');
   }
   const onClickNextHandler = () => {
+    if (selectedBuilding === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/cleaning/step3');
   }

@@ -32,7 +32,7 @@ export default function CleaningFourPage() {
     router.push('/commission/cleaning/step3');
   }
   const onClickNextHandler = () => {
-    if (area === '' ) return;
+    if (area === '' || selectedOption === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/cleaning/step5');
   }
