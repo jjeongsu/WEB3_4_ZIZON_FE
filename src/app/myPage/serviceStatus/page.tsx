@@ -5,24 +5,12 @@ import SellStateTabContainer from '@/components/molecules/sellStateTabContainer/
 import OrderList from '@/components/organisms/orderList/OrderList';
 import NumberReadability from '@/components/atoms/texts/numberReadability/NumberReadability';
 import { getMyContracts } from '@/apis/contract/getMyContracts';
-import { Contract } from '@/types/contract';
 import { ContractStatus } from '@/types/contract';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import LoadingSpinner from '@/components/atoms/loadingSpinner/LoadingSpinner';
 import ErrorState from '@/components/molecules/errorState/ErrorState';
 import EmptyState from '@/components/molecules/emptyState/EmptyState';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
-
-// Contract를 Order 형식으로 변환하는 함수
-const convertContractToOrder = (contract: Contract) => {
-  return {
-    id: contract.contractId.toString(),
-    imageUrl: '/images/defaultImage.png', // 기본 이미지 사용
-    price: contract.price,
-    sellState: contract.status,
-    category: contract.projectTitle,
-  };
-};
 
 export default function ServiceStatusPage() {
   const [selectedState, setSelectedState] = useState<ContractStatus | null>(null);
@@ -74,7 +62,7 @@ export default function ServiceStatusPage() {
   }, [allContracts]);
 
   // 문의하기 버튼 클릭 핸들러
-  const handleAskButtonClick = (orderId: string) => {
+  const handleAskButtonClick = (orderId: number) => {
     console.log('문의하기 클릭:', orderId);
     // 문의하기 기능 구현
   };
@@ -90,11 +78,6 @@ export default function ServiceStatusPage() {
       fetchNextPage();
     }
   };
-
-  // Order 형식으로 변환된 계약 목록
-  const orders = useMemo(() => {
-    return filteredContracts.map(convertContractToOrder);
-  }, [filteredContracts]);
 
   // 로딩 중 표시
   if (isLoading) {
@@ -145,7 +128,7 @@ export default function ServiceStatusPage() {
         ) : (
           <>
             <OrderList
-              orders={orders}
+              orders={filteredContracts}
               onAskButtonClick={handleAskButtonClick}
               isExpertView={true}
             />
