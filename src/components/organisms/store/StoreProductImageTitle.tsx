@@ -77,7 +77,6 @@ export default function StoreProductImageTitle({ product }: StoreProductImageTit
         </div>
 
         <div className="absolute bottom-0 left-0 w-full max-w-500">
-          <div>재고 : {product.stock}</div>
           <StandardButton
             text={'구매하기'}
             size="full"

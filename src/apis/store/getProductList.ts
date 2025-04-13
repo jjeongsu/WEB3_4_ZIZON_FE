@@ -17,6 +17,7 @@ export interface Product {
   expertName: string;
   categoryName: string;
   createdAt: string;
+  stock: number;
 }
 
 type ProductListResponseType = {
