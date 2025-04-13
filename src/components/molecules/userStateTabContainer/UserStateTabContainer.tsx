@@ -35,8 +35,8 @@ function UserStateTabContainer({ isState }: UserStateTabContainerProps) {
         size="small"
       />
       <VerticalTabItem
-        name="boughtProduct"
-        isFocused={pathname === '/myPage/boughtProduct'}
+        name="purchasedProducts"
+        isFocused={pathname === '/myPage/purchasedProducts'}
         text="구매한 상품"
         onClick={handleTabClick}
         size="small"
@@ -67,8 +67,8 @@ function UserStateTabContainer({ isState }: UserStateTabContainerProps) {
             size="small"
           />
           <VerticalTabItem
-            name="saleProduct"
-            isFocused={pathname === '/myPage/saleProduct'}
+            name="sellingProducts"
+            isFocused={pathname === '/myPage/sellingProducts'}
             text="판매중인 상품"
             onClick={handleTabClick}
             size="small"

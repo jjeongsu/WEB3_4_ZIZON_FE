@@ -28,3 +28,25 @@ export interface DigitalContent {
   fileType: string;
   downloadLimit: number;
 }
+
+// 상품 타입 정의
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  productType: ProductType;
+  thumbnailUrl: string;
+  expertName: string;
+  categoryName: string;
+  createdAt: string;
+}
+
+// 내가 판매중인 상품 응답 타입
+export interface MySellingProductsResponseType {
+  products: Product[];
+  currentPage: number;
+  pageSize: number;
+  hasNext: boolean;
+}

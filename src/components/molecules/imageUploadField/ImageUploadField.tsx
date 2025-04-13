@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ImageUploadButton from '@/components/atoms/buttons/imageUploadButton/ImageUploadButton';
 import Image from 'next/image';
 import { TableUnionType } from '@/apis/imageUpload/modules/postImageUpload';
+import { validateImageUrl } from '@/utils/imageUrlValidator';
 
 interface ImageUploadFieldProps {
   label: string;
@@ -11,11 +12,13 @@ interface ImageUploadFieldProps {
 
 export default function ImageUploadField({ label, onImageChange }: ImageUploadFieldProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   const handleImageUpload = (file: File) => {
     // 파일을 URL로 변환하여 미리보기 표시
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
+    setImageError(false);
 
     // 부모 컴포넌트에 파일 전달
     if (onImageChange) {
@@ -30,7 +33,13 @@ export default function ImageUploadField({ label, onImageChange }: ImageUploadFi
         <ImageUploadButton onImageUpload={handleImageUpload} />
         {previewUrl && (
           <div className="relative w-100 h-100 rounded-lg border border-black3 overflow-hidden">
-            <Image src={previewUrl} alt="미리보기 이미지" fill className="object-cover" />
+            <Image
+              src={imageError ? '/images/DefaultImage.png' : validateImageUrl(previewUrl)}
+              alt="미리보기 이미지"
+              fill
+              className="object-cover"
+              onError={() => setImageError(true)}
+            />
           </div>
         )}
       </div>
