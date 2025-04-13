@@ -59,7 +59,7 @@ export default function SellingProductsPage() {
         />
       ) : (
         <>
-          <div className="w-full grid grid-cols-3 gap-20">
+          <div className="w-full grid grid-cols-2 gap-24">
             {products.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
