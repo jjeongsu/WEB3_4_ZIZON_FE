@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import EditProductModal from '@/components/organisms/editProductModal/EditProductModal';
 import { validateImageUrl } from '@/utils/imageUrlValidator';
 import SelectedOption from '@/components/atoms/texts/selectedOption/SelectedOption';
-import { useRouter } from 'next/navigation';
 
 interface ProductCardProps {
   product: Product;
@@ -20,7 +19,6 @@ export default function ProductCard({ product, onDelete, onUpdate }: ProductCard
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const router = useRouter();
 
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
@@ -35,7 +33,7 @@ export default function ProductCard({ product, onDelete, onUpdate }: ProductCard
       const response = await deleteProduct(product.id);
       toast.success(response.message);
       setIsDeleteModalOpen(false);
-      router.refresh();
+      window.location.reload();
       if (onDelete) {
         onDelete();
       }
@@ -57,7 +55,7 @@ export default function ProductCard({ product, onDelete, onUpdate }: ProductCard
     if (onUpdate) {
       onUpdate();
     }
-    router.refresh();
+    window.location.reload();
   };
 
   return (

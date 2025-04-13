@@ -10,7 +10,6 @@ import CancelOrderModal from '@/components/organisms/cancelOrderModal/CancelOrde
 import { cancelPayment } from '@/apis/payment/cancelPayment';
 import { toast } from 'sonner';
 import { validateImageUrl } from '@/utils/imageUrlValidator';
-import { useRouter } from 'next/navigation';
 
 interface OrderCardProps {
   order: Order;
@@ -19,7 +18,6 @@ interface OrderCardProps {
 export default function OrderCard({ order }: OrderCardProps) {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const router = useRouter();
 
   const handleCancelClick = () => {
     setIsCancelModalOpen(true);
@@ -34,7 +32,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
       toast.success(response.message);
       setIsCancelModalOpen(false);
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       toast.error('주문 취소에 실패했습니다. 다시 시도해주세요.');
       console.error('주문 취소 실패:', error);
