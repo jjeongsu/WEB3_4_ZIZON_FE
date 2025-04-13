@@ -1,5 +1,5 @@
-import { ContractStatus } from './contract';
 import { ProjectStatus } from './project';
+import { ContractStatus } from './contract';
 
 export interface SellStateConfig {
   label: string;
@@ -23,12 +23,12 @@ export const sellStateConfig: Record<ProjectStatus | ContractStatus, SellStateCo
     label: '진행중',
     textColor: 'text-primary4',
   },
-  CANCELLED: {
-    label: '취소•문제 해결',
-    textColor: 'text-redWarning',
-  },
   COMPLETED: {
     label: '구매 확정',
     textColor: 'text-black6',
+  },
+  CANCELLED: {
+    label: '취소•문제 해결',
+    textColor: 'text-redWarning',
   },
 } as const;
