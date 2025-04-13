@@ -58,7 +58,7 @@ export default function ChattingList({
       />
 
       {/* 채팅 목록 */}
-      <div className="flex flex-col rounded-[8px] border-1 border-black4 overflow-hidden ">
+      <div className="flex flex-col rounded-[8px] border-1 border-black4 overflow-x-hidden max-h-830 overfllow-y-scroll">
         {chatRoomList.map((item, index) => (
           <ChatListItem
             key={index}
