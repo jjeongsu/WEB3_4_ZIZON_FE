@@ -41,7 +41,22 @@ function MessageTemplate({
             height={30}
           />
           <div className="bg-black2 px-16 py-12 rounded-lg text-base/24 ">
-            <p className="text-black10 text-16">{message}</p>
+            {message !== null && <p className="text-black10 text-16">{message}</p>}
+
+            {fileUrl && (
+              <div className="flex gap-8">
+                <a href={fileUrl} download className="">
+                  <p className="text-black10 text-16">자세히보기</p>
+                </a>
+                <Image
+                  className="w-150 h-150"
+                  src={fileUrl}
+                  alt="fileURL"
+                  width={100}
+                  height={100}
+                />
+              </div>
+            )}
           </div>
           <div className="place-self-end text-black8 text-13 font-medium ml-8">
             <p>{yearMMDD}</p>
@@ -61,8 +76,8 @@ function MessageTemplate({
           </div>
           <div className="bg-primary0 px-16 py-12 rounded-lg text-base/24 ">
             {message !== null && <p className="text-black10 text-16">{message}</p>}
-            <div>{fileUrl}</div>
-            {fileUrl !== null && (
+
+            {fileUrl && (
               <div className="flex gap-8">
                 <a href={fileUrl} download className="">
                   <p className="text-black10 text-16">자세히보기</p>

@@ -205,7 +205,7 @@ export default function ChattingRoom({
     }
     const text = input.trim();
     //const fileUrl = hiddenFileUrl;
-    if (!text) {
+    if (!text && !fileUrl) {
       alert('메시지 내용 또는 이미지를 선택하세요.');
       return;
     }
