@@ -20,6 +20,19 @@ export default function StoreProductImageTitle({ product }: StoreProductImageTit
   const [amount, setAmount] = useState<number>(1);
   const router = useRouter();
 
+  const paymentButtonAbility = () => {
+    if (product.stock == -1) {
+      if (amount === 0) {
+        return true;
+      }
+      return false;
+    } else if (product.stock === 0) {
+      return true;
+    } else if (amount === 0 || amount > product.stock) {
+      return true;
+    }
+  };
+
   const handleBuyClick = () => {
     // 결제 페이지로 이동
     router.push(`/payments?id=${product.id}&type=${paymentType}&quantity=${amount}`);
@@ -28,7 +41,7 @@ export default function StoreProductImageTitle({ product }: StoreProductImageTit
     <div className="w-full flex gap-43">
       {/* 상품이미지 */}
       <Image
-        src={product.thumbnailImage}
+        src={product.thumbnailImage || '/images/DefaultImage.png'}
         alt="product-image"
         className="w-392 h-392 rounded-[16px] object-cover"
         width={392}
@@ -58,18 +71,19 @@ export default function StoreProductImageTitle({ product }: StoreProductImageTit
             onChange={value => setAmount(value)}
             id={'amount'}
             placeholder={'주문수량'}
-            error={amount > product.stock}
+            error={product.stock !== -1 && amount > product.stock}
             errorText="재고가 부족합니다."
           />
         </div>
 
         <div className="absolute bottom-0 left-0 w-full max-w-500">
+          <div>재고 : {product.stock}</div>
           <StandardButton
             text={'구매하기'}
             size="full"
             state="blue"
             onClick={handleBuyClick}
-            disabled={amount > product.stock || product.stock === 0}
+            disabled={paymentButtonAbility()}
           />
         </div>
       </div>
