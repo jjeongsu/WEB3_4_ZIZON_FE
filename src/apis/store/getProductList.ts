@@ -4,6 +4,7 @@ import { APIBuilder } from '@/utils/APIBuilder';
 export interface ProductListRequestType {
   categoryId: string;
   page: number;
+  keyword?: string;
 }
 
 export interface Product {
@@ -28,8 +29,21 @@ type ProductListResponseType = {
 export default async function getProductList({
   categoryId,
   page,
+  keyword,
 }: ProductListRequestType): Promise<ProductListResponseType> {
-  const response = await APIBuilder.get(`/products?page=${page}&size=12&categoryId=${categoryId}`)
+  // URLSearchParams를 사용하여 동적으로 쿼리 생성
+  const params = new URLSearchParams();
+
+  // 필수 파라미터 추가
+  params.append('page', page.toString());
+  params.append('size', '12');
+  params.append('categoryId', categoryId);
+
+  // 선택적 파라미터 추가
+  if (keyword) {
+    params.append('keyword', keyword);
+  }
+  const response = await APIBuilder.get(`/products?${params.toString()}`)
     .timeout(10000)
     .withCredentials(true)
     .build()

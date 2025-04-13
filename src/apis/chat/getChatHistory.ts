@@ -13,9 +13,13 @@ export interface MessageType {
 }
 
 export default async function getChatHistory(roomId: string): Promise<MessageType[]> {
-  const [sender, receiver] = roomId.split(':');
+  const [projectId, senderReceiverPart] = roomId.split('|'); //
+  const [sender, receiver] = senderReceiverPart.split(':'); // sender와 receiver 분리
+
   const response = await APIBuilder.get(
-    `/chatrooms?sender=${encodeURIComponent(sender)}&receiver=${encodeURIComponent(receiver)}`,
+    `/chatrooms?sender=${encodeURIComponent(sender)}&receiver=${encodeURIComponent(
+      receiver,
+    )}&projectId=${projectId}`,
   )
     .timeout(10000)
     .withCredentials(true)
