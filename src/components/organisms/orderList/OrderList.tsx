@@ -2,18 +2,14 @@
 
 import React from 'react';
 import OrderListItem from '@/components/molecules/orderListItem/OrderListItem';
-import { ProjectStatus } from '@/types/project';
-import { ContractStatus } from '@/types/contract';
-interface Order {
-  imageUrl: string;
-  price: number;
-  sellState: ProjectStatus | ContractStatus;
-  category: string;
-}
+import { Project } from '@/types/project';
+import { Contract } from '@/types/contract';
+
+type OrderItemType = Project | Contract;
 
 interface OrderListProps {
-  orders: Order[];
-  onAskButtonClick: (orderId: string) => void;
+  orders: OrderItemType[];
+  onAskButtonClick: (orderId: number) => void;
   isExpertView?: boolean;
 }
 
@@ -24,14 +20,17 @@ export default function OrderList({
 }: OrderListProps) {
   return (
     <div className="flex flex-col gap-16">
-      {orders.map((order, index) => (
-        <OrderListItem
-          key={`${order.category}-${index}`}
-          {...order}
-          onClickAskButton={() => onAskButtonClick(`${order.category}-${index}`)}
-          isExpertView={isExpertView}
-        />
-      ))}
+      {orders.map(order => {
+        const id = 'id' in order ? order.id : order.contractId;
+        return (
+          <OrderListItem
+            key={id}
+            item={order}
+            onClickAskButton={() => onAskButtonClick(id)}
+            isExpertView={isExpertView}
+          />
+        );
+      })}
     </div>
   );
 }
