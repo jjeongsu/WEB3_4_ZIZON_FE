@@ -9,12 +9,14 @@ interface ClientChattingInfoProps {
   expertData: ExpertType | undefined;
   offerData: OfferResponseType | undefined;
   expertId: number | null;
+  roomId?: string | null;
 }
 
 export default function ClientChattingInfo({
   expertData,
   offerData,
   expertId,
+  roomId,
 }: ClientChattingInfoProps) {
   if (!expertId) {
     return (
@@ -30,7 +32,7 @@ export default function ClientChattingInfo({
   return (
     <div className="w-full max-w-402 flex flex-col gap-16">
       {offerData && expertData && (
-        <ChattingButtonGroup offerInfo={offerData} expertInfo={expertData} />
+        <ChattingButtonGroup offerInfo={offerData} expertInfo={expertData} roomId={roomId} />
       )}
       {offerData && expertData && (
         <OfferInfo

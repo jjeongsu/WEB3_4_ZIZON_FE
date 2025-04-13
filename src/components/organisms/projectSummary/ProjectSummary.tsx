@@ -16,7 +16,7 @@ export default function ProjectSummary({ projectData }: ProjectSummaryProps) {
   );
 
   return (
-    <div className="w-402 min-w-300 rounded-[8px] flex flex-col gap-32 px-32 py-32 bg-black1">
+    <div className="w-402 min-w-300 rounded-[8px] flex flex-col gap-32 px-32 py-32 bg-black1 max-h-[660px] overflow-y-scroll">
       {/* 유저 프로필 이미지과 정보영역 */}
       <div className="flex gap-20">
         <Image

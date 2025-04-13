@@ -25,7 +25,10 @@ export default function StoreMainTemplate({ searchKeyword }: { searchKeyword: st
           categoryId: category,
           keyword: searchKeyword,
         });
-        setData(productListData);
+        const filteredData = productListData.filter(
+          product => product.stock > 0 || product.stock === -1,
+        );
+        setData(filteredData);
         setHasNext(hasNext);
       } catch (error) {
         console.error('Error fetching initial data:', error);
@@ -46,7 +49,10 @@ export default function StoreMainTemplate({ searchKeyword }: { searchKeyword: st
         page: page + 1,
         categoryId: category,
       });
-      setData(prevData => (prevData ? [...prevData, ...productListData] : productListData));
+      const filteredData = productListData.filter(
+        product => product.stock > 0 || product.stock === -1,
+      );
+      setData(prevData => (prevData ? [...prevData, ...filteredData] : filteredData));
       setPage(prevPage => prevPage + 1);
       setHasNext(hasNext);
     } catch (error) {

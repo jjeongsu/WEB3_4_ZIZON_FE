@@ -70,7 +70,12 @@ export default function ChattingTemplate() {
         handleFilterChange={handleFilterChange}
       />
 
-      <ClientChattingInfo expertData={expertData} offerData={offerData} expertId={expertId} />
+      <ClientChattingInfo
+        expertData={expertData}
+        offerData={offerData}
+        expertId={expertId}
+        roomId={room}
+      />
     </div>
   );
 }
