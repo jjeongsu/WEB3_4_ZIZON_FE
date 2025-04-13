@@ -44,10 +44,7 @@ function MessageTemplate({
             {message !== null && <p className="text-black10 text-16">{message}</p>}
 
             {fileUrl && (
-              <div className="flex gap-8">
-                <a href={fileUrl} download className="">
-                  <p className="text-black10 text-16">자세히보기</p>
-                </a>
+              <div className="flex flex-col gap-8">
                 <Image
                   className="w-150 h-150"
                   src={fileUrl}
@@ -55,12 +52,14 @@ function MessageTemplate({
                   width={100}
                   height={100}
                 />
+                <a href={fileUrl} download className="">
+                  <p className="text-black10 text-16">자세히보기</p>
+                </a>
               </div>
             )}
           </div>
           <div className="place-self-end text-black8 text-13 font-medium ml-8">
             <p>{yearMMDD}</p>
-
             <p>{hourMinute}</p>
           </div>
         </div>
@@ -78,10 +77,7 @@ function MessageTemplate({
             {message !== null && <p className="text-black10 text-16">{message}</p>}
 
             {fileUrl && (
-              <div className="flex gap-8">
-                <a href={fileUrl} download className="">
-                  <p className="text-black10 text-16">자세히보기</p>
-                </a>
+              <div className="flex flex-col gap-8">
                 <Image
                   className="w-150 h-150"
                   src={fileUrl}
@@ -89,6 +85,9 @@ function MessageTemplate({
                   width={100}
                   height={100}
                 />
+                <a href={fileUrl} download className="">
+                  <p className="text-black10 text-16">자세히보기</p>
+                </a>
               </div>
             )}
           </div>

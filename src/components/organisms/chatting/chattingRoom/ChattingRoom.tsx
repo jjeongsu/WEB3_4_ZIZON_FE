@@ -16,6 +16,7 @@ import FilePreview from '@/components/atoms/filePreview/FilePreview';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { setFlagsFromString } from 'v8';
+import { Console } from 'console';
 
 interface ChattingRoomProps {
   roomId: string | null;
@@ -243,9 +244,9 @@ export default function ChattingRoom({
   }, [roomId]);
   useEffect(() => {
     scrollToBottom();
-    console.log('채팅내역', messages);
+    //console.log('채팅내역', messages);
   }, [messages]);
-
+  //console.log('채팅방', messages);
   return (
     <div className="flex gap-24 items-start">
       <Suspense>
