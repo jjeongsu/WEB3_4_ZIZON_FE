@@ -23,8 +23,12 @@ export default function ReviewModal({ isOpen, onClose, onSubmit, productName }: 
 
   return (
     <ModalContainer open={isOpen}>
-      <div className="bg-white px-40 py-36 rounded-2xl shadow-lg w-340">
-        <h3 className="text-24 font-semibold text-center mb-16">{productName} 리뷰 작성</h3>
+      <div className="bg-white px-40 py-36 rounded-2xl shadow-lg w-400">
+        <h3 className="text-24 font-semibold text-center mb-16">
+          {productName}
+          <br />
+          리뷰 작성
+        </h3>
         <div className="mb-24">
           <div className="flex items-center justify-center gap-8 mb-16">
             {[1, 2, 3, 4, 5].map(star => (
