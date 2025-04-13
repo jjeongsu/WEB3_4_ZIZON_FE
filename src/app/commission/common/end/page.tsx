@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
 import CommonEndStepTemplate from '@/components/templates/stepperTemplate/common/CommonEndStepTemplate';
 import { selectedOptionIndexObject } from '@/components/molecules/selectedOptionList/SelectedOptionList';
@@ -7,11 +7,15 @@ import { commissionQuestion } from '@/utils/commissionQuestion';
 import { postProject } from '@/apis/project/postProject';
 import { getCommissionCategory } from '@/utils/getCommissionCategory';
 import { postChatRooms } from '@/apis/chat/postChatRooms';
+import postChatRoomWithExpert from '@/apis/chat/postChatRoomWithExpert';
+import deleteCookie from '@/utils/deleteCookie';
 
 export default function CommonEndPage() {
   const [selectedDay, setSelectedDay] = React.useState<Date | undefined>(new Date());
   const [selectedOptionList, setSelectedOptionList] = useState<selectedOptionIndexObject[]>([]);
-  const [selectedOptionListNewItem, setSelectedOptionListNewItem] = useState<selectedOptionIndexObject[]>([]);
+  const [selectedOptionListNewItem, setSelectedOptionListNewItem] = useState<
+    selectedOptionIndexObject[]
+  >([]);
   const [title, setTile] = React.useState<string>('');
   const [subtitle, setSubtitle] = React.useState<string>('');
   const [price, setPrice] = React.useState<string>('');
@@ -29,7 +33,8 @@ export default function CommonEndPage() {
 
       const month = date.getMonth() + 1;
       const day = date.getDate();
-      if (prev.length === 0 || typeof selectedDay === undefined) return [{'마감 날짜': `${month}월 ${day}일`}];
+      if (prev.length === 0 || typeof selectedDay === undefined)
+        return [{ '마감 날짜': `${month}월 ${day}일` }];
 
       updated[0]['마감 날짜'] = `${month}월 ${day}일`;
       return updated;
@@ -39,7 +44,7 @@ export default function CommonEndPage() {
     const copyList = selectedOptionList;
     copyList.pop();
     localStorage.setItem('selectedIndex', JSON.stringify(copyList));
-  }
+  };
   const onClickNextHandler = async () => {
     if (title === '' || subtitle === '' || price === '' || selectedDay === undefined) return;
     const categoryId = getCommissionCategory(selectedOptionList[0]['요청 형식']);
@@ -63,53 +68,61 @@ export default function CommonEndPage() {
       title,
       summary: subtitle,
       region,
-      deadline: `${year}-${month < 10 ? "0"+month : month}-${day < 10 ? "0"+day : day}T01:01:01`,
+      deadline: `${year}-${month < 10 ? '0' + month : month}-${
+        day < 10 ? '0' + day : day
+      }T01:01:01`,
       description: JSON.stringify(description),
       budget: Number(price),
+      expertId: targetExpertId ? Number(targetExpertId) : null,
     };
 
-    if (targetExpertId) {
-      requestBody.target_expert_id = targetExpertId;
-    }
     const response = await postProject(requestBody);
 
-    if(targetExpertId) {
-      const newChatRooms = await postChatRooms({project_id: `${response.projectId}`});
-      console.log(newChatRooms);
-      if(newChatRooms.message === "채팅방이 생성되었습니다.") {
+    if (targetExpertId) {
+      try {
+        const newChatRooms = await postChatRoomWithExpert(
+          response.projectId,
+          Number(targetExpertId),
+        );
+        alert('채팅방이 생성되었습니다. 전문가와 대화해보세요!');
         router.push(`/client/chat`);
+      } catch (error) {
+        alert('채팅방 생성 실패');
+        console.error(error);
+        router.push(`/commission/${response.projectId}`);
+      } finally {
+        deleteCookie('target_expert_id');
       }
-    } else {
-      router.push(`/commission/${response.projectId}`);
     }
-  }
+  };
   const titleChangeHandler = (value: string) => {
     setTile(value);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return [{"제목": value}];
+      if (prev.length === 0) return [{ 제목: value }];
       const updated = [...prev];
       updated[0]['제목'] = value;
       return updated;
     });
-  }
+  };
   const subtitleChangeHandler = (value: string) => {
     setSubtitle(value);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return [{"부제목": value}];
+      if (prev.length === 0) return [{ 부제목: value }];
       const updated = [...prev];
       updated[0]['부제목'] = value;
       return updated;
     });
-  }
+  };
   const priceChangeHandler = (value: string) => {
     setPrice(value);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return [{"비용": value}];
+      if (prev.length === 0) return [{ 비용: value }];
       const updated = [...prev];
       updated[0]['비용'] = value;
       return updated;
     });
-  }
+  };
+
   return (
     <CommonEndStepTemplate
       id1={'address'}
@@ -125,6 +138,7 @@ export default function CommonEndPage() {
       onClickNext={onClickNextHandler}
       selectedDay={selectedDay}
       setSelectedDay={setSelectedDay}
-      selectedOptionListProps={[...selectedOptionList, ...selectedOptionListNewItem]}/>
+      selectedOptionListProps={[...selectedOptionList, ...selectedOptionListNewItem]}
+    />
   );
 }

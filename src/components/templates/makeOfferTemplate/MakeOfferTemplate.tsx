@@ -10,9 +10,10 @@ import { useRouter } from 'next/navigation';
 
 interface MakeOfferTemplateProps {
   projectSummary: ProjectResponseType;
+  hasChat?: boolean | null;
 }
 
-export default function MakeOfferTemplate({ projectSummary }: MakeOfferTemplateProps) {
+export default function MakeOfferTemplate({ projectSummary, hasChat }: MakeOfferTemplateProps) {
   const router = useRouter();
   const projectId = projectSummary.id;
 
@@ -20,13 +21,20 @@ export default function MakeOfferTemplate({ projectSummary }: MakeOfferTemplateP
     mutationFn: (request: PostOfferRequestType) => postOffer(request),
     onSuccess: async () => {
       alert('견적서가 성공적으로 전송되었습니다.');
-      try {
-        const response = await postCreateRoom(projectId);
-        alert('채팅방 생성 성공');
+
+      // 만약 이미 채팅방이 있다면 채팅방은 생성하지 않고 그냥 채팅방으로 이동
+      if (hasChat) {
         router.push('/expert/chat');
-      } catch (error) {
-        alert(`채팅방 생성 실패 ${error}`);
-        console.error('채팅방 생성 실패', error);
+        return;
+      } else {
+        try {
+          const response = await postCreateRoom(projectId);
+          alert('채팅방 생성 성공');
+          router.push('/expert/chat');
+        } catch (error) {
+          alert(`채팅방 생성 실패 ${error}`);
+          console.error('채팅방 생성 실패', error);
+        }
       }
     },
     onError: error => {

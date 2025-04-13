@@ -26,7 +26,7 @@ export default function ChattingButtonGroup({
       setOpenContract(false);
       const { contractId } = data;
       const paymentType = 'PROJECT';
-      router.push(`/payments?${contractId}&type=${paymentType}`);
+      router.push(`/payments?id=${contractId}&type=${paymentType}`);
     },
   });
   postContractMutation.data;

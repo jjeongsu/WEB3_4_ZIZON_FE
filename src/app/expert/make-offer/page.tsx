@@ -7,9 +7,10 @@ export default async function MakeOfferPage({
 }: {
   searchParams: Promise<{
     projectId: string;
+    hasChat?: boolean;
   }>;
 }) {
-  const { projectId } = await searchParams;
+  const { projectId, hasChat } = await searchParams;
 
   // 해당 Id로 프로젝트 정보 조회
 
@@ -17,7 +18,7 @@ export default async function MakeOfferPage({
 
   return (
     <div className="px-520 mt-46 flex justify-center">
-      <MakeOfferTemplate projectSummary={projectData} />
+      <MakeOfferTemplate projectSummary={projectData} hasChat={hasChat} />
     </div>
   );
 }
