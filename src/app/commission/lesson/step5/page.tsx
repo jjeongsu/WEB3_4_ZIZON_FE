@@ -43,7 +43,7 @@ export default function LessonFivePage() {
     router.push('/commission/lesson/step4');
   }
   const onClickNextHandler = () => {
-    if (address.length === 0 && checkSelected === null) return;
+    if (address.length === 0 || checkSelected === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/common/end');
   }

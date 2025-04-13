@@ -44,7 +44,7 @@ function Page() {
     router.push('/commission/cleaning/step4');
   }
   const onClickNextHandler = () => {
-    if (address.length === 0) return;
+    if (address.length === 0 || question.length === 0 || checkSelected === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/common/end');
   }

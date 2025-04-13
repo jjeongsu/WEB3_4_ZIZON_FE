@@ -32,7 +32,7 @@ export default function LessonFourPage() {
     router.push('/commission/lesson/step3');
   }
   const onClickNextHandler = () => {
-    if (selectedGender === null && selectPreferGender === null) return;
+    if (selectedGender === null || selectPreferGender === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/lesson/step5');
   }
