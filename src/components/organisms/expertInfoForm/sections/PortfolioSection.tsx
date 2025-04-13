@@ -40,7 +40,7 @@ export default function PortfolioSection({
   };
 
   return (
-    <div className="flex flex-col gap-16 p-20 bg-black1 rounded-xl mb-120">
+    <div className="flex flex-col gap-16 p-20 bg-black1 rounded-xl mb-10">
       <div className="flex justify-between items-center">
         <h3 className="text-16 font-medium">포트폴리오</h3>
         <button
