@@ -1,3 +1,4 @@
+import { is } from 'react-day-picker/locale';
 import { AccountStatus } from '@/types/user';
 
 interface TokenPayload {
@@ -8,6 +9,7 @@ interface TokenPayload {
   status: AccountStatus;
   iat: number;
   exp: number;
+  isClient: boolean;
 }
 
 export function decodeToken(token: string): TokenPayload | null {

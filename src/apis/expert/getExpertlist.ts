@@ -13,7 +13,7 @@ export interface ExpertListItemType {
   introduction: string;
   profileImage: string;
   mainCategoryId: number;
-  expertId?: number; // 백엔드 추가 예정
+  expertId?: number;
 }
 
 export type ExpertListResponseType = ExpertListItemType[];

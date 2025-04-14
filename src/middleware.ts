@@ -36,15 +36,13 @@ export async function middleware(request: NextRequest) {
   // cookieStore.get('accessToken')?.value; // 쿠키에서 accessToken 가져오기
   let requestToken: string | undefined;
 
-  if(request.cookies.get('accessToken') === undefined) {
+  if (request.cookies.get('accessToken') === undefined) {
     requestToken = undefined;
   } else {
-    requestToken = request.cookies.get('accessToken')?.value
+    requestToken = request.cookies.get('accessToken')?.value;
   }
-  console.log("requestToken -> ", requestToken);
-  console.log('All cookies:', request.cookies.getAll());
-  const currentPathname = request.nextUrl.pathname;
 
+  const currentPathname = request.nextUrl.pathname;
 
   // 현재 경로가 protectedRoutes의 하위경로인지 확인
   const underProtectedRoutes = protectedRoutes.some(route => currentPathname.startsWith(route));
@@ -62,7 +60,7 @@ export async function middleware(request: NextRequest) {
   // 로그인 상태
   if (token) {
     const decodedToken = decodeToken(token);
-    const role = decodedToken?.role; // CLIENT, EXPERT
+    const role = decodedToken?.isClient ? 'CLIENT' : 'EXPERT'; // CLIENT, EXPERT
 
     //재 로그인 접근 시도 -> 메인 페이지로 이동
     if (publicRoutes.includes(currentPathname)) {
