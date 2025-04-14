@@ -1,8 +1,7 @@
-import { clsx } from 'clsx';
 import { APIBuilder } from '@/utils/APIBuilder';
 
 export interface ProductListRequestType {
-  categoryId: string;
+  categoryId?: string;
   page: number;
   keyword?: string;
 }
@@ -20,7 +19,7 @@ export interface Product {
   stock: number;
 }
 
-type ProductListResponseType = {
+export type ProductListResponseType = {
   products: Array<Product>;
   currentPage: number;
   pageSize: number;
@@ -38,7 +37,9 @@ export default async function getProductList({
   // 필수 파라미터 추가
   params.append('page', page.toString());
   params.append('size', '12');
-  params.append('categoryId', categoryId);
+  if (categoryId) {
+    params.append('categoryId', categoryId);
+  }
 
   // 선택적 파라미터 추가
   if (keyword) {
