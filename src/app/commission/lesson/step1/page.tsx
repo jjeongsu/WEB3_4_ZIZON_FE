@@ -45,7 +45,9 @@ export default function LessonOnePage() {
   };
 
   const onBeforeHandler = () => {
-    localStorage.setItem('selectedIndex', JSON.stringify(selectedOptionList));
+    const copyList = selectedOptionList;
+    copyList.pop();
+    localStorage.setItem('selectedIndex', JSON.stringify(copyList));
     router.push('/commission/common/start');
   };
 

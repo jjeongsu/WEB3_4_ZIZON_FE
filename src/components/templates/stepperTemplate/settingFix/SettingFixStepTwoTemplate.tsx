@@ -28,7 +28,7 @@ export default function SettingFixStepTwoTemplate({id, value, onChange, selected
       <CommissionTopBox title={'2.서비스 날짜 및 지역'} progressStep={4} isBefore={true} onClickBefore={onBeforeAction} />
       <div className='flex mt-24 items-start w-full'>
         <div className='mr-24 w-full bg-black1 rounded-lg pb-40'>
-          <CheckSelectBox checkSelectBoxProps={checkSelectBoxProps} title={"설치 및 수리의 대상이 무엇인가요?"} />
+          <CheckSelectBox checkSelectBoxProps={checkSelectBoxProps} title={"서비스를 받고 싶은 날이 언제인가요?"} />
           {selectedIndex === 3 ? <DatePickerWithTitle title={'날짜를 선택해주세요'} selectedDay={selectedDay}
                                                       setSelectedDay={setSelectedDay} /> : null}
           <div className="mt-32">
