@@ -2,9 +2,14 @@ import React, { ReactElement } from 'react';
 import InputLabel from '@/components/atoms/texts/inputLabel/InputLabel';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
 import TextInput from '@/components/atoms/inputs/textInput/TextInput';
+import NumberInput from '@/components/atoms/inputs/numberInput/NumberInput';
+import TextareaInput from '@/components/atoms/inputs/textareaInput/TextareaInput';
+import FileInput from '@/components/atoms/inputs/fileInput/FileInput';
+
+type InputType = typeof TextInput | typeof NumberInput | typeof TextareaInput | typeof FileInput;
 
 export interface InputTemplateProps {
-  InputComponent: ReactElement<typeof TextInput>;
+  InputComponent: ReactElement<InputType>;
   LabelComponent: ReactElement<typeof InputLabel>;
   ButtonComponent?: ReactElement<typeof StandardButton>;
   TextButtonComponent?: React.ReactNode;
