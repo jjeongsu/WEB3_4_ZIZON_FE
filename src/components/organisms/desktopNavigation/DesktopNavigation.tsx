@@ -16,7 +16,10 @@ function DesktopNavigation() {
     const checkAuth = async () => {
       try {
         const userData = await getCurrentUser();
-        setMember(userData);
+        setMember({
+          ...userData,
+          ...member,
+        });
       } catch (error) {
         console.log(error);
         initializeStore();

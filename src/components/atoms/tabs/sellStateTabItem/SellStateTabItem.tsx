@@ -3,10 +3,11 @@
 import Image from 'next/image';
 import ProgressBlue from 'public/icons/ProgressBlue.svg';
 import ProblemRed from 'public/icons/ProblemRed.svg';
-import { SellState } from '@/types/sellState';
+import { ProjectStatus } from '@/types/project';
+import { ContractStatus } from '@/types/contract';
 
 interface SellStateTabItemProps {
-  state: SellState;
+  state: ProjectStatus | ContractStatus;
   count: number;
   isSelected?: boolean;
   isExpertView?: boolean;
@@ -14,21 +15,36 @@ interface SellStateTabItemProps {
 }
 
 const stateConfig = {
-  inProgress: {
+  OPEN: {
+    icon: null,
+    label: '공고중',
+    hasBorder: false,
+  },
+  PENDING: {
+    icon: null,
+    label: '대기중',
+    hasBorder: false,
+  },
+  IN_PROGRESS: {
     icon: ProgressBlue,
     label: '진행중',
     hasBorder: false,
   },
-  cancelled: {
+  CANCELLED: {
     icon: ProblemRed,
     label: '주문 취소',
     hasBorder: false,
   },
-  completed: {
+  COMPLETED: {
     icon: null,
     label: '구매 확정',
     expertLabel: '거래 완료',
     hasBorder: true,
+  },
+  DISPUTED: {
+    icon: null,
+    label: '분쟁중',
+    hasBorder: false,
   },
 } as const;
 
@@ -43,7 +59,7 @@ export default function SellStateTabItem({
   isExpertView = false,
   onClick,
 }: SellStateTabItemProps) {
-  const config = stateConfig[state];
+  const config = stateConfig[state as keyof typeof stateConfig];
   const formattedCount = formatNumber(count);
   const label = isExpertView && 'expertLabel' in config ? config.expertLabel : config.label;
 

@@ -12,13 +12,41 @@ import IntroductionSection from './sections/IntroductionSection';
 import BankInfoSection from './sections/BankInfoSection';
 import PortfolioSection from './sections/PortfolioSection';
 import { ExpertCategoryName } from '@/types/expert';
+import ConfirmModal from '@/components/organisms/confirmModal/ConfirmModal';
+import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
+import { deleteExpert } from '@/apis/expert/deleteExpert';
+import { useRouter } from 'next/navigation';
 
 export default function ExpertInfoForm() {
+  const router = useRouter();
   const { expert, setExpert } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // 폼 데이터 상태 관리
   const { formData, setFormData, editableFields, toggleEditable } = useExpertForm(expert);
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!expert?.id) return;
+
+    try {
+      const response = await deleteExpert(expert.id);
+      toast.success(response.message);
+      setIsDeleteModalOpen(false);
+      router.push('/');
+    } catch (error) {
+      toast.error('전문가 프로필 삭제에 실패했습니다. 다시 시도해주세요.');
+      console.error('전문가 프로필 삭제 실패:', error);
+    }
+  };
 
   // 공통 업데이트 함수
   const handleUpdate = async (
@@ -279,6 +307,25 @@ export default function ExpertInfoForm() {
         }}
         onSave={handlePortfolioUpdate}
         disabled={isLoading}
+      />
+
+      <div className="flex justify-end">
+        <StandardButton
+          text="전문가 프로필 삭제"
+          onClick={handleDeleteClick}
+          disabled={false}
+          state="red"
+        />
+      </div>
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="전문가 프로필 삭제"
+        message={`정말로 전문가 프로필을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`}
+        confirmText="삭제"
+        cancelText="취소"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleDeleteModalClose}
       />
     </div>
   );

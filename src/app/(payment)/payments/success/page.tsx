@@ -22,6 +22,11 @@ export default async function SuccessResultPage({
     amount: amount,
   });
 
+  if (response.status === 'fail') {
+    // 실패
+    return <div> 결제에 실패 하였습니다.</div>;
+  }
+
   const successResultData = {
     amount: response.amount,
     expertName: response.expertName,

@@ -4,23 +4,12 @@ import React, { useState, useMemo } from 'react';
 import SellStateTabContainer from '@/components/molecules/sellStateTabContainer/SellStateTabContainer';
 import OrderList from '@/components/organisms/orderList/OrderList';
 import getMyProjects from '@/apis/project/getMyProjects';
-import { Project, ProjectStatus } from '@/types/project';
+import { ProjectStatus } from '@/types/project';
 import { useQuery } from '@tanstack/react-query';
 import LoadingSpinner from '@/components/atoms/loadingSpinner/LoadingSpinner';
 import ErrorState from '@/components/molecules/errorState/ErrorState';
 import EmptyState from '@/components/molecules/emptyState/EmptyState';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
-
-// Project를 Order 형식으로 변환하는 함수
-const convertProjectToOrder = (project: Project) => {
-  return {
-    id: project.id,
-    imageUrl: project.thumbnailImageUrl || '/images/defaultImage.png',
-    price: project.budget,
-    sellState: project.status,
-    category: project.title,
-  };
-};
 
 export default function MyProjectPage() {
   const [selectedState, setSelectedState] = useState<ProjectStatus | null>(null);
@@ -54,16 +43,14 @@ export default function MyProjectPage() {
   // 상태별 프로젝트 수 계산
   const counts = useMemo(() => {
     return {
-      inProgress: allProjects.filter(
-        project => project.status === 'OPEN' || project.status === 'IN_PROGRESS',
-      ).length,
+      inProgress: allProjects.filter(project => project.status === 'IN_PROGRESS').length,
       cancelled: allProjects.filter(project => project.status === 'CANCELLED').length,
       completed: allProjects.filter(project => project.status === 'COMPLETED').length,
     };
   }, [allProjects]);
 
   // 문의하기 버튼 클릭 핸들러
-  const handleAskButtonClick = (orderId: string) => {
+  const handleAskButtonClick = (orderId: number) => {
     console.log('문의하기 클릭:', orderId);
     // 문의하기 기능 구현
   };
@@ -79,11 +66,6 @@ export default function MyProjectPage() {
       setCurrentPage(prev => prev + 1);
     }
   };
-
-  // Order 형식으로 변환된 프로젝트 목록
-  const orders = useMemo(() => {
-    return filteredProjects.map(convertProjectToOrder);
-  }, [filteredProjects]);
 
   // 로딩 중 표시
   if (isLoading) {
@@ -125,7 +107,7 @@ export default function MyProjectPage() {
           </div>
         ) : (
           <>
-            <OrderList orders={orders} onAskButtonClick={handleAskButtonClick} />
+            <OrderList orders={filteredProjects} onAskButtonClick={handleAskButtonClick} />
 
             {/* 더 보기 버튼 */}
             {data?.hasNext && (

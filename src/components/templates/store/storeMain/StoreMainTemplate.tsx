@@ -1,14 +1,12 @@
 'use client';
 
 import getProductList, { Product } from '@/apis/store/getProductList';
-import TextButton from '@/components/atoms/buttons/textButton/TextButton';
 import StoreMainContent from '@/components/organisms/store/StoreMainContent';
 import StoreSearchRegister from '@/components/organisms/store/StoreSearchResgister';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import { is } from 'react-day-picker/locale';
 
 // page로 부터 받을 데이터  : 상품 목록
-export default function StoreMainTemplate() {
+export default function StoreMainTemplate({ searchKeyword }: { searchKeyword: string }) {
   const [category, setCategory] = useState<string>('5001'); // 현재 선택된 카테고리
   const [data, setData] = useState<Product[] | null>(null); // 현재 상품 목록
   const [page, setPage] = useState<number>(0); // 현재 페이지
@@ -25,8 +23,12 @@ export default function StoreMainTemplate() {
         const { products: productListData, hasNext } = await getProductList({
           page: 0,
           categoryId: category,
+          keyword: searchKeyword,
         });
-        setData(productListData);
+        const filteredData = productListData.filter(
+          product => product.stock > 0 || product.stock === -1,
+        );
+        setData(filteredData);
         setHasNext(hasNext);
       } catch (error) {
         console.error('Error fetching initial data:', error);
@@ -35,7 +37,7 @@ export default function StoreMainTemplate() {
       }
     };
     fetchInitialData();
-  }, [category]);
+  }, [category, searchKeyword]);
 
   // 더 많은 데이터 패칭
   const loadMoreData = async () => {
@@ -47,7 +49,10 @@ export default function StoreMainTemplate() {
         page: page + 1,
         categoryId: category,
       });
-      setData(prevData => (prevData ? [...prevData, ...productListData] : productListData));
+      const filteredData = productListData.filter(
+        product => product.stock > 0 || product.stock === -1,
+      );
+      setData(prevData => (prevData ? [...prevData, ...filteredData] : filteredData));
       setPage(prevPage => prevPage + 1);
       setHasNext(hasNext);
     } catch (error) {

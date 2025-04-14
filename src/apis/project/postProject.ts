@@ -1,7 +1,7 @@
 import { APIBuilder } from '@/utils/APIBuilder';
 
 interface PostProjectRequest {
-  categoryId: number,
+  categoryId: number;
   title: string;
   summary: string;
   description: string;
@@ -24,7 +24,7 @@ export const postProject = async ({
   budget,
   deadline,
   expertId,
-  imageUrls
+  imageUrls,
 }: PostProjectRequest) => {
   const bodyForm = {
     categoryId,
@@ -33,9 +33,11 @@ export const postProject = async ({
     description,
     region,
     budget,
-    deadline
+    deadline,
+    expertId,
   };
-  const response = await APIBuilder.post('/projects', bodyForm)
+
+  const response = await APIBuilder.post('/projects', { ...bodyForm })
     .headers({
       'Content-Type': 'application/json',
     })
@@ -44,6 +46,5 @@ export const postProject = async ({
     .build()
     .call<PostProjectResponse>();
 
-
   return response.data;
-}
+};

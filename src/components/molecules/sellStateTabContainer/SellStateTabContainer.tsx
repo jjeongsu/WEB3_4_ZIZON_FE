@@ -1,7 +1,8 @@
 'use client';
 
 import SellStateTabItem from '@/components/atoms/tabs/sellStateTabItem/SellStateTabItem';
-import { SellState } from '@/types/sellState';
+import { ContractStatus } from '@/types/contract';
+import { ProjectStatus } from '@/types/project';
 
 interface SellStateTabContainerProps {
   counts: {
@@ -9,8 +10,8 @@ interface SellStateTabContainerProps {
     cancelled: number;
     completed: number;
   };
-  selectedState: SellState | null;
-  onStateSelect: (state: SellState) => void;
+  selectedState: ProjectStatus | ContractStatus | null;
+  onStateSelect: (state: ProjectStatus | ContractStatus) => void;
   isExpertView?: boolean;
 }
 
@@ -23,25 +24,25 @@ export default function SellStateTabContainer({
   return (
     <div className="grid grid-cols-3 gap-x-16 gap-y-16 p-16 border border-black3 rounded-2xl mb-32">
       <SellStateTabItem
-        state="inProgress"
+        state="IN_PROGRESS"
         count={counts.inProgress}
-        isSelected={selectedState === 'inProgress'}
+        isSelected={selectedState === 'IN_PROGRESS'}
         isExpertView={isExpertView}
-        onClick={() => onStateSelect('inProgress')}
+        onClick={() => onStateSelect('IN_PROGRESS')}
       />
       <SellStateTabItem
-        state="cancelled"
+        state="CANCELLED"
         count={counts.cancelled}
-        isSelected={selectedState === 'cancelled'}
+        isSelected={selectedState === 'CANCELLED'}
         isExpertView={isExpertView}
-        onClick={() => onStateSelect('cancelled')}
+        onClick={() => onStateSelect('CANCELLED')}
       />
       <SellStateTabItem
-        state="completed"
+        state="COMPLETED"
         count={counts.completed}
-        isSelected={selectedState === 'completed'}
+        isSelected={selectedState === 'COMPLETED'}
         isExpertView={isExpertView}
-        onClick={() => onStateSelect('completed')}
+        onClick={() => onStateSelect('COMPLETED')}
       />
     </div>
   );

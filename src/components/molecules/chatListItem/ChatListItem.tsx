@@ -8,6 +8,7 @@ interface ChatListItemProps {
   userProfile: string;
   isSelected: boolean;
   onClick: (chatRoomId: string) => void;
+  unreadCount?: number;
 }
 
 export default function ChatListItem({
@@ -18,6 +19,7 @@ export default function ChatListItem({
   userProfile,
   isSelected,
   onClick,
+  unreadCount,
 }: ChatListItemProps) {
   const styleMap = {
     selected: 'bg-primary0 ',
@@ -31,10 +33,14 @@ export default function ChatListItem({
       className={`relative w-402 h-fit px-20 py-16 flex gap-8 ${style} `}
     >
       {isSelected && <div className="absolute w-8 h-full bg-primary4 top-0 left-0" />}
-
+      {unreadCount > 0 && (
+        <div className="absolute left-[10px] top-[15px] w-20 h-20 bg-primary4 rounded-full flex justify-center items-center text-[10px] text-white">
+          <span>{unreadCount}</span>
+        </div>
+      )}
       {/* 프로필 이미지*/}
       <Image
-        src={userProfile}
+        src={userProfile || '/images/DefaultImage.png'}
         width={40}
         height={40}
         alt="user-profile-image"

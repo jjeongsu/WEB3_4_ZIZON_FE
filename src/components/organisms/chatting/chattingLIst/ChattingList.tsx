@@ -6,32 +6,39 @@ import SmallTag from '@/components/atoms/tags/smallTag/SmallTag';
 import ChatListItem from '@/components/molecules/chatListItem/ChatListItem';
 import { CHATTING_STATE, ChattingStateType } from '@/constants/chat';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 interface ChattingListProps {
   chatRoomList: GetRoomsResponse;
-  handleRoomChange: (roomId: string, projectId: number, userId: number, receiver: string) => void;
+  handleRoomChange: (roomId: string, projectId: number, expertId: number, receiver: string) => void;
   room: string | null; // 선택된 채팅방 id
+  handleFilterChange?: (filter: string) => void; // 필터 변경 핸들러
 }
 
-export default function ChattingList({ chatRoomList, handleRoomChange, room }: ChattingListProps) {
+export default function ChattingList({
+  chatRoomList,
+  handleRoomChange,
+  room,
+  handleFilterChange,
+}: ChattingListProps) {
   const [filter, setFilter] = useState<ChattingStateType>(CHATTING_STATE[0].state);
   const [search, setSearch] = useState<string>('');
-  const searchParams = useSearchParams();
-  const id = searchParams.get('roomId'); // 현재 선택된 채팅방 id
-  const router = useRouter();
 
-  // 현재 채팅 유저 상태 -> 전역에서 가져오는 방법 고려
-  const pathname = usePathname();
-  const userType = pathname.split('/')[1]; // client or expert
-
+  const filteredChatRoomList = chatRoomList.filter(
+    room => room.otherUserName?.includes(search) || room.lastMessage?.includes(search),
+  );
   return (
     <div className="w-402 flex flex-col gap-20 justify-end">
       {/* 필터 태그 */}
       <div className="flex gap-8">
         {CHATTING_STATE.map(item => (
-          <div onClick={() => setFilter(item.state)} key={item.state}>
+          <div
+            onClick={() => {
+              handleFilterChange(item.state);
+              setFilter(item.state);
+            }}
+            key={item.state}
+          >
             <SmallTag text={item.name} theme={filter === item.state ? 'dark' : 'default'} />
           </div>
         ))}
@@ -46,8 +53,8 @@ export default function ChattingList({ chatRoomList, handleRoomChange, room }: C
       />
 
       {/* 채팅 목록 */}
-      <div className="flex flex-col rounded-[8px] border-1 border-black4 overflow-hidden ">
-        {chatRoomList.map((item, index) => (
+      <div className="flex flex-col rounded-[8px] border-1 border-black4 overflow-x-hidden max-h-830 overfllow-y-scroll">
+        {filteredChatRoomList.map((item, index) => (
           <ChatListItem
             key={index}
             chatRoomId={item.roomId}
@@ -57,8 +64,9 @@ export default function ChattingList({ chatRoomList, handleRoomChange, room }: C
             userProfile={item.otherUserProfile}
             isSelected={room === item.roomId}
             onClick={() =>
-              handleRoomChange(item.roomId, item.projectId, item.otherUserId, item.receiver)
+              handleRoomChange(item.roomId, item.projectId, item.expertId, item.receiver)
             }
+            unreadCount={item.unreadCount}
           />
         ))}
       </div>

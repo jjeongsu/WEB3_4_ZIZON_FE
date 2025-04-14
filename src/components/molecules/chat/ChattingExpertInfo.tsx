@@ -7,7 +7,7 @@ import { ProjectCategoryIdType } from '@/constants/category';
 export default function ChattingExpertInfo({ expertData }: { expertData: ExpertType | null }) {
   if (!expertData) return;
   return (
-    <div className="w-full bg-black1 px-32 py-32 rounded-[8px] flex flex-col gap-32 transition-opacity duration-500">
+    <div className="w-full bg-black1 px-32 py-32 rounded-[8px] flex flex-col gap-32 transition-opacity duration-500 max-h-520 overflow-y-scroll">
       <ExpertProfile
         ExpertInfoCardComponent={
           <ExpertInfoCard

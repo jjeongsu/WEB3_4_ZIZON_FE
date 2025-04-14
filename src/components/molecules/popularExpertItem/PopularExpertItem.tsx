@@ -1,3 +1,4 @@
+import SmallTag from '@/components/atoms/tags/smallTag/SmallTag';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -43,12 +44,13 @@ export default function PopularExpertItem({
           <span className="font-bold text-20 text-black10"> {name}</span>
           <span className="font-medium text-16 text-black7">{categoryName} 전문가</span>
         </div>
-        {/*<div className="flex items-center justify-center gap-8">*/}
-        {/*  <button onClick={() => onLikeClick(expertId)} className="cursor-pointer h-32">*/}
-        {/*    <LikeTag type={isLikeOn} count={likeCount} />*/}
-        {/*  </button>*/}
-        {/*  <StarTag rating={rating} reviewCount={reviewCount} />*/}
-        {/*</div>*/}
+        <div className="flex items-center justify-center gap-8">
+          <SmallTag text={`${careerYears}년 경력`} />
+          {/* <button onClick={() => onLikeClick(expertId)} className="cursor-pointer h-32">
+            <LikeTag type={isLikeOn} count={likeCount} />
+          </button>
+          <StarTag rating={rating} reviewCount={reviewCount} /> */}
+        </div>
       </div>
     </Link>
   );
