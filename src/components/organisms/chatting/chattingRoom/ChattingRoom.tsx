@@ -69,7 +69,7 @@ export default function ChattingRoom({
 
   // WebSocket 연결 함수
   const connectWebSocket = () => {
-    const socket = new SockJS('http://localhost:8080/ws-chat');
+    const socket = new SockJS(`https://api.dopdang.shop/ws-chat`);
     const stompClient = Stomp.over(socket);
     stompClient.debug = (str: string) => {
       console.log('🐛 STOMP Debug:', str);
@@ -118,7 +118,7 @@ export default function ChattingRoom({
       contentType: contentType,
     };
     try {
-      const res = await fetch('http://localhost:8080/chat/presigned', {
+      const res = await fetch(`https://api.dopdang.shop/chat/presigned`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(presignPayload),
@@ -184,7 +184,7 @@ export default function ChattingRoom({
     if (!roomId) return;
     try {
       const response = await fetch(
-        `http://localhost:8080/chatrooms/${roomId}/read?username=${encodeURIComponent(
+        `https://api.dopdang.shop/chatrooms/${roomId}/read?username=${encodeURIComponent(
           currentUserEmail,
         )}`,
         {
@@ -229,6 +229,7 @@ export default function ChattingRoom({
 
     if (stompClientRef.current) {
       stompClientRef.current.send('/app/chat.send', {}, JSON.stringify(chatMessage));
+      queryClient.invalidateQueries({ queryKey: ['chatRoomList'] });
     }
     setInput('');
     setFile(null); // 파일 초기화
@@ -246,7 +247,7 @@ export default function ChattingRoom({
     scrollToBottom();
     //console.log('채팅내역', messages);
   }, [messages]);
-  //console.log('채팅방', messages);
+  console.log('채팅방', messages);
   return (
     <div className="flex gap-24 items-start">
       <Suspense>
@@ -281,7 +282,7 @@ export default function ChattingRoom({
           <TextInput
             value={input}
             onChange={(value: string) => setInput(value)}
-            placeholder="메시지를 입력해주세요. (Enter: 줄바꿈 / Ctrl+Enter: 전송)"
+            placeholder="메시지를 입력해주세요."
             id="chatting-input"
             type="text"
             disabled={false}
