@@ -48,7 +48,7 @@ export default function CleaningFourPage() {
   const onCheckSelectedHandler = (key: string, label: string) => {
     setSelectedOption(key);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return prev;
+      if (prev.length === 0) return [{"추가 서비스": label}];
       const updated = [...prev];
       updated[0]['추가 서비스'] = label;
       return updated;

@@ -22,7 +22,7 @@ export default function SettingFixStepOnePage() {
   }, []);
 
   const onNextHandler = () => {
-    if(!selectedKey && detailItemText.length > 0) return;
+    if(!selectedKey || detailItemText.length === 0) return;
     const newIndex = selectedOptionListNewItem;
     newIndex[newIndex.length - 1]["세부 사항"] = detailItemText
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...newIndex]));
