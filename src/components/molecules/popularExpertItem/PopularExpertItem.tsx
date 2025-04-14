@@ -2,16 +2,8 @@ import SmallTag from '@/components/atoms/tags/smallTag/SmallTag';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-
-export interface PopularExpertItemProps {
-  name: string;
-  categoryName: string;
-  careerYears: number;
-  introduction: string;
-  profileImage: string;
-  expertId: number;
-  mainCategoryId: number;
-}
+import StarTag from '@/components/atoms/tags/starTag/StarTag';
+import { Expert } from '@/apis/main/getPopularExpert';
 
 export default function PopularExpertItem({
   categoryName,
@@ -20,8 +12,10 @@ export default function PopularExpertItem({
   introduction,
   profileImage,
   expertId,
+  averageScore,
+  review,
   mainCategoryId,
-}: PopularExpertItemProps) {
+}: Expert) {
   const [imagePath, setImagePath] = useState(profileImage);
   // const isLikeOn = isLike ? 'like-on' : 'like-off';
   return (
@@ -46,10 +40,10 @@ export default function PopularExpertItem({
         </div>
         <div className="flex items-center justify-center gap-8">
           <SmallTag text={`${careerYears}년 경력`} />
-          {/* <button onClick={() => onLikeClick(expertId)} className="cursor-pointer h-32">
-            <LikeTag type={isLikeOn} count={likeCount} />
-          </button>
-          <StarTag rating={rating} reviewCount={reviewCount} /> */}
+          {/*<button onClick={() => onLikeClick(expertId)} className="cursor-pointer h-32">*/}
+          {/*  <LikeTag type={isLikeOn} count={likeCount} />*/}
+          {/*</button>*/}
+          <StarTag rating={averageScore} reviewCount={review} />
         </div>
       </div>
     </Link>
