@@ -1,16 +1,17 @@
 import { APIBuilder } from '@/utils/APIBuilder';
 
 interface CreateReviewRequest {
-  reviewType: 'project';
-  contractId: number | null;
-  orderId: number;
-  expertId: number;
-  rating: number;
+  projectId: number;
+  score: number;
   content: string;
+  imageUrl: string;
 }
 
 interface CreateReviewResponse {
-  message: string;
+  id: number;
+  reviewrerName: string;
+  score: number;
+  createdAt: string;
 }
 
 /**
