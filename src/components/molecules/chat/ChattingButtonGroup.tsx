@@ -53,7 +53,7 @@ export default function ChattingButtonGroup({
       if (response) {
         try {
           const outResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_LOCAL_SERVER_URL}/chatrooms/${roomId}/leave?username=${currentUserEmail}`,
+            `${process.env.SERVER_URL}/chatrooms/${roomId}/leave?username=${currentUserEmail}`,
             {
               method: 'POST',
               headers: {
