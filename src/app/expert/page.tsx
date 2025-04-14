@@ -2,8 +2,6 @@ import { ExpertListRequestType, getExpertlist } from '@/apis/expert/getExpertlis
 import ExpertTemplate from '@/components/templates/expertTemplate/ExpertTemplate';
 import { PROJECT_CATEGORY, ProjectCategoryIdType } from '@/constants/category';
 
-const ALL_CATEGORY = '이사/청소,과외,설치/수리,취미/자기계발';
-
 export default async function ExpertPage({
   searchParams,
 }: {
@@ -16,11 +14,12 @@ export default async function ExpertPage({
   const { category, career, search } = await searchParams;
 
   const RequestQuery: ExpertListRequestType = {
-    careerLevel: career?.toUpperCase() || 'JUNIOR',
-    categoryNames: PROJECT_CATEGORY[category as ProjectCategoryIdType] || ALL_CATEGORY,
+    careerLevel: career?.toUpperCase() || null,
+    categoryNames: PROJECT_CATEGORY[category as ProjectCategoryIdType] || null,
     search: search ? search : undefined,
   };
 
   const data = await getExpertlist(RequestQuery);
+  console.log('전문가 목록', data);
   return <ExpertTemplate expertList={data} />;
 }
