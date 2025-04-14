@@ -12,6 +12,12 @@ import { GetRoomsResponse } from '@/apis/chat/getRooms';
 import getChatHistory from '@/apis/chat/getChatHistory';
 import FileInput from '@/components/atoms/inputs/fileInput/FileInput';
 import { useUserStore } from '@/store/userStore';
+import FilePreview from '@/components/atoms/filePreview/FilePreview';
+
+import { useQueryClient } from '@tanstack/react-query';
+import { setFlagsFromString } from 'v8';
+import { Console } from 'console';
+
 interface ChattingRoomProps {
   roomId: string | null;
   setRoom: (roomId: string | null) => void;
@@ -39,9 +45,11 @@ export default function ChattingRoom({
   // 채팅방 관련 변수
   const [messages, setMessages] = useState<any[]>([]); // 메시지 상태 관리
   const [input, setInput] = useState<string>(''); // 입력 상태 관리
+  const [file, setFile] = useState<File | null>(null); // 파일 이름 상태 관리
+  const [fileUrl, setFileUrl] = useState<string>(null); // 파일 URL 상태 관리
   const messagesEndRef = useRef<HTMLDivElement>(null); // 스크롤을 위한 ref
-  const [isLoadingHis, setIsLoadingHis] = useState(false); // 로딩 상태 관리
 
+  const queryClient = useQueryClient();
   // WebSocket 관련 참조
   const stompClientRef = useRef<any>(null);
   const chatSubscriptionRef = useRef<any>(null);
@@ -92,16 +100,51 @@ export default function ChattingRoom({
   };
   // 메세지가 추가될 때 스크롤을 항상 아래로 이동
   const scrollToBottom = () => {
-    // if (messagesEndRef.current) {
-    //   messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    // }
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   };
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+
+  // 이미지 업로드 처리
+  const handlefileChange = async (file: File) => {
+    if (!file) {
+      alert('파일을 선택하세요.');
+      return;
+    }
+    const contentType = file.type;
+    const presignPayload = {
+      folder: 'chating',
+      fileName: file.name,
+      contentType: contentType,
+    };
+    try {
+      const res = await fetch('http://localhost:8080/chat/presigned', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(presignPayload),
+        credentials: 'include',
+      });
+      if (!res.ok) {
+        throw new Error('Presigned URL 생성에 실패하였습니다.');
+      }
+      const data = await res.json();
+      const presignedUrl = data.presignedUrl;
+      const accessUrl = data.accessUrl;
+      const uploadResponse = await fetch(presignedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': contentType },
+        body: file,
+      });
+      if (!uploadResponse.ok) {
+        throw new Error('파일 업로드에 실패하였습니다. 상태 코드: ' + uploadResponse.status);
+      }
+      alert('이미지 업로드 성공!');
+      setFileUrl(accessUrl); // 업로드된 이미지 URL 설정
+      setFile(file);
+    } catch (error: any) {
+      alert('이미지 업로드에 실패하였습니다: ' + error.message);
+    }
+  };
 
   // 채팅방 변경 시 처리
   const handleRoomChange = (
@@ -136,6 +179,25 @@ export default function ChattingRoom({
     }
   };
 
+  // 채팅방 읽음 처리
+  const markRoomRead = async (roomId: string) => {
+    if (!roomId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:8080/chatrooms/${roomId}/read?username=${encodeURIComponent(
+          currentUserEmail,
+        )}`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
+      const text = await response.text();
+    } catch (error) {
+      console.error('Error marking room as read:', error);
+    }
+  };
+
   // 메시지 전송 함수
   const sendMessage = () => {
     if (!roomId) {
@@ -144,7 +206,7 @@ export default function ChattingRoom({
     }
     const text = input.trim();
     //const fileUrl = hiddenFileUrl;
-    if (!text) {
+    if (!text && !fileUrl) {
       alert('메시지 내용 또는 이미지를 선택하세요.');
       return;
     }
@@ -162,21 +224,29 @@ export default function ChattingRoom({
       receiver: receiverEmail,
       projectId: projectId,
       content: text, // 파일이면 여기가 null
-      fileUrl: null, // 여기에 url
+      fileUrl: fileUrl, // 여기에 url
     };
 
     if (stompClientRef.current) {
       stompClientRef.current.send('/app/chat.send', {}, JSON.stringify(chatMessage));
     }
     setInput('');
+    setFile(null); // 파일 초기화
+    setFileUrl(null); // 파일 URL 초기화
     //setHiddenFileUrl('');
   };
   useEffect(() => {
     if (senderEmail) {
       connectWebSocket();
+      markRoomRead(roomId!); // 채팅방 읽음 처리
+      queryClient.invalidateQueries({ queryKey: ['chatRoomList'] });
     }
-  }, [roomId, member]);
-
+  }, [roomId]);
+  useEffect(() => {
+    scrollToBottom();
+    //console.log('채팅내역', messages);
+  }, [messages]);
+  //console.log('채팅방', messages);
   return (
     <div className="flex gap-24 items-start">
       <Suspense>
@@ -200,10 +270,12 @@ export default function ChattingRoom({
                 dateTime={new Date(message.timestamp)}
                 message={message.content}
                 tag={message.sender === senderEmail ? 'get' : 'send'}
+                fileUrl={message.fileUrl}
               />
             ))}
-          {/* <div ref={messagesEndRef} /> */}
         </div>
+        {/* 파일 이름 */}
+        {file && <FilePreview file={file} onDelete={() => setFile(null)} />}
         {/* 채팅입력 */}
         <div className="w-full flex flex-col gap-10">
           <TextInput
@@ -219,13 +291,10 @@ export default function ChattingRoom({
           {/* 채팅 전송 */}
           <div className="flex justify-between items-center">
             <FileInput
-              label="첨부파일"
+              label="이미지업로드"
               name="file-input"
-              accept="image/*, .pdf, .docx"
-              onChange={(file: File) => {
-                // setFile(file);
-                // //console.log('첨부파일:', file);
-              }}
+              accept="image/*"
+              onChange={handlefileChange}
             />
             <StandardButton
               text="전송"

@@ -35,7 +35,7 @@ function ExpertRegisterTemplete() {
   });
   const [portfolioImageFile, setPortfolioImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { member: storeMember, setExpert, setMember } = useUserStore();
+  const { member: storeMember, setExpert, setMember, setCurrentRole } = useUserStore();
 
   const isStepValid = () => {
     switch (step) {
@@ -139,6 +139,8 @@ function ExpertRegisterTemplete() {
           ...storeMember,
           expertId: expertData.id,
         });
+
+        await setCurrentRole('expert');
 
         router.push('/myPage/expertInfo');
       } else {

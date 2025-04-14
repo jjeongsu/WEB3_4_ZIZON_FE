@@ -3,11 +3,18 @@ import Image from 'next/image';
 
 interface MessageTemplateProps {
   dateTime: Date;
-  message: string;
+  message?: string;
   tag: 'get' | 'send';
   senderProfileImage?: string;
+  fileUrl?: string;
 }
-function MessageTemplate({ dateTime, message, tag, senderProfileImage }: MessageTemplateProps) {
+function MessageTemplate({
+  dateTime,
+  message,
+  tag,
+  senderProfileImage,
+  fileUrl,
+}: MessageTemplateProps) {
   const yearMMDD = dateTime
     .toLocaleDateString('ko-KR', {
       year: 'numeric',
@@ -34,11 +41,25 @@ function MessageTemplate({ dateTime, message, tag, senderProfileImage }: Message
             height={30}
           />
           <div className="bg-black2 px-16 py-12 rounded-lg text-base/24 ">
-            <p className="text-black10 text-16">{message}</p>
+            {message !== null && <p className="text-black10 text-16">{message}</p>}
+
+            {fileUrl && (
+              <div className="flex flex-col gap-8">
+                <Image
+                  className="w-150 h-150"
+                  src={fileUrl}
+                  alt="fileURL"
+                  width={100}
+                  height={100}
+                />
+                <a href={fileUrl} download className="">
+                  <p className="text-black10 text-16">자세히보기</p>
+                </a>
+              </div>
+            )}
           </div>
           <div className="place-self-end text-black8 text-13 font-medium ml-8">
             <p>{yearMMDD}</p>
-
             <p>{hourMinute}</p>
           </div>
         </div>
@@ -53,7 +74,22 @@ function MessageTemplate({ dateTime, message, tag, senderProfileImage }: Message
             <p className="float-end">{hourMinute}</p>
           </div>
           <div className="bg-primary0 px-16 py-12 rounded-lg text-base/24 ">
-            <p className="text-black10 text-16">{message}</p>
+            {message !== null && <p className="text-black10 text-16">{message}</p>}
+
+            {fileUrl && (
+              <div className="flex flex-col gap-8">
+                <Image
+                  className="w-150 h-150"
+                  src={fileUrl}
+                  alt="fileURL"
+                  width={100}
+                  height={100}
+                />
+                <a href={fileUrl} download className="">
+                  <p className="text-black10 text-16">자세히보기</p>
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

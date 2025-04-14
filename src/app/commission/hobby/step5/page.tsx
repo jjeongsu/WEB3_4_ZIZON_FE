@@ -43,7 +43,7 @@ export default function HobbyFivePage() {
     router.push('/commission/hobby/step4');
   }
   const onClickNextHandler = () => {
-    if (address.length === 0) return;
+    if (address.length === 0 || checkSelected === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/common/end');
   }

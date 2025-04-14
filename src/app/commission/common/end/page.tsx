@@ -44,6 +44,7 @@ export default function CommonEndPage() {
     const copyList = selectedOptionList;
     copyList.pop();
     localStorage.setItem('selectedIndex', JSON.stringify(copyList));
+    router.back();
   };
   const onClickNextHandler = async () => {
     if (title === '' || subtitle === '' || price === '' || selectedDay === undefined) return;
@@ -105,6 +106,7 @@ export default function CommonEndPage() {
     });
   };
   const subtitleChangeHandler = (value: string) => {
+    if (value.length > 99) return;
     setSubtitle(value);
     setSelectedOptionListNewItem(prev => {
       if (prev.length === 0) return [{ 부제목: value }];

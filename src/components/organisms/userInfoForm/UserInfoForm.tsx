@@ -8,12 +8,16 @@ import { Member } from '@/types/user';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
 import PasswordInput from '@/components/molecules/passwordInput/PasswordInput';
 import { FormValidator } from '@/utils/FormValidator';
+import ConfirmModal from '@/components/organisms/confirmModal/ConfirmModal';
+import { deleteUser } from '@/apis/user/deleteUser';
+import { useRouter } from 'next/navigation';
 
 interface UserInfoFormProps {
   initialData: Member;
 }
 
 export default function UserInfoForm({ initialData }: UserInfoFormProps) {
+  const router = useRouter();
   const { member, setMember } = useUserStore();
   const [name, setName] = useState(initialData.name);
   const [phone, setPhone] = useState(initialData.phone);
@@ -22,6 +26,7 @@ export default function UserInfoForm({ initialData }: UserInfoFormProps) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // 유효성 검사 상태
   const [currentPasswordError, setCurrentPasswordError] = useState('');
@@ -159,6 +164,28 @@ export default function UserInfoForm({ initialData }: UserInfoFormProps) {
     setSubmitError('');
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!member?.id) return;
+
+    try {
+      const response = await deleteUser(member.id);
+      toast.success(response.message);
+      setIsDeleteModalOpen(false);
+      router.push('/');
+    } catch (error) {
+      toast.error('회원 탈퇴에 실패했습니다. 다시 시도해주세요.');
+      console.error('회원 탈퇴 실패:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-32">
       <EditableField
@@ -244,6 +271,20 @@ export default function UserInfoForm({ initialData }: UserInfoFormProps) {
         onChange={setPhone}
         isEditable={false}
         disabled={true}
+      />
+
+      <div className="flex justify-end">
+        <StandardButton text="회원 탈퇴" onClick={handleDeleteClick} disabled={false} state="red" />
+      </div>
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="회원 탈퇴"
+        message={`정말로 회원 탈퇴를 진행하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`}
+        confirmText="탈퇴"
+        cancelText="취소"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleDeleteModalClose}
       />
     </div>
   );

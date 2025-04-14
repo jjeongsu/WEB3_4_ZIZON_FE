@@ -1,37 +1,46 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Order } from '@/types/order';
 import { getDotSeparatedDate } from '@/utils/dateFormat';
 import SmallTag from '@/components/atoms/tags/smallTag/SmallTag';
 import DigitalContentList from '@/components/molecules/digitalContentList/DigitalContentList';
 import SelectedOption from '@/components/atoms/texts/selectedOption/SelectedOption';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
-import ConfirmModal from '@/components/organisms/confirmModal/ConfirmModal';
+import CancelOrderModal from '@/components/organisms/cancelOrderModal/CancelOrderModal';
+import { cancelPayment } from '@/apis/payment/cancelPayment';
+import { toast } from 'sonner';
+import { validateImageUrl } from '@/utils/imageUrlValidator';
 
 interface OrderCardProps {
   order: Order;
 }
 
 export default function OrderCard({ order }: OrderCardProps) {
-  const router = useRouter();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleClick = () => {
-    router.push(`/store/products/${order.id}`);
-  };
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleCancelClick = () => {
-    setIsModalOpen(true);
+    setIsCancelModalOpen(true);
   };
 
-  const handleConfirmCancel = () => {
-    // TODO: 구매 취소 API 호출 로직 추가
-    setIsModalOpen(false);
+  const handleConfirmCancel = async () => {
+    try {
+      const response = await cancelPayment({
+        orderId: order.orderId,
+        cancelReason: '고객 요청에 의한 취소',
+      });
+
+      toast.success(response.message);
+      setIsCancelModalOpen(false);
+      window.location.reload();
+    } catch (error) {
+      toast.error('주문 취소에 실패했습니다. 다시 시도해주세요.');
+      console.error('주문 취소 실패:', error);
+    }
   };
 
   const handleCancelModal = () => {
-    setIsModalOpen(false);
+    setIsCancelModalOpen(false);
   };
 
   const getStatusBadge = (status: string) => {
@@ -55,10 +64,7 @@ export default function OrderCard({ order }: OrderCardProps) {
 
   return (
     <>
-      <article
-        className="bg-black1 px-28 py-24 flex flex-col gap-16 rounded-lg hover:shadow-style1 overflow-hidden cursor-pointer transition-shadow duration-300"
-        onClick={handleClick}
-      >
+      <article className="bg-black1 px-28 py-24 flex flex-col gap-16 rounded-lg hover:shadow-style1 overflow-hidden transition-shadow duration-300">
         <div className="flex justify-between">
           <div className="flex items-center gap-8">
             <span className="text-16 text-black7">주문번호: {order.orderId}</span>
@@ -69,10 +75,13 @@ export default function OrderCard({ order }: OrderCardProps) {
         <div className="flex items-center gap-24">
           <div className="relative w-124 h-124 border border-black3 rounded-lg">
             <Image
-              src={order.productThumbnail || '/images/DeafultImage.png'}
+              src={
+                imageError ? '/images/DefaultImage.png' : validateImageUrl(order.productThumbnail)
+              }
               alt={order.productTitle}
               fill
               className="object-cover"
+              onError={() => setImageError(true)}
             />
           </div>
 
@@ -119,14 +128,11 @@ export default function OrderCard({ order }: OrderCardProps) {
         )}
       </article>
 
-      <ConfirmModal
-        isOpen={isModalOpen}
-        title="구매 취소"
-        message="정말로 구매를 취소하시겠습니까?"
-        confirmText="취소하기"
-        cancelText="돌아가기"
+      <CancelOrderModal
+        isOpen={isCancelModalOpen}
+        onClose={handleCancelModal}
         onConfirm={handleConfirmCancel}
-        onCancel={handleCancelModal}
+        productName={order.productTitle}
       />
     </>
   );

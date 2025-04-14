@@ -45,7 +45,7 @@ function DesktopFooter() {
             <h3 className="text-black10 text-16 font-semibold">BACKEND</h3>
             <ul className="flex flex-col gap-8">
               <li>
-                <p className="text-black7 text-16 font-regular">여경환</p>
+                <p className="text-black7 text-16 font-regular">여승환</p>
               </li>
               <li>
                 <p className="text-black7 text-16 font-regular">문경환</p>
