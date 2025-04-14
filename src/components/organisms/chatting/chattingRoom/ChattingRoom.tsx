@@ -13,10 +13,7 @@ import getChatHistory from '@/apis/chat/getChatHistory';
 import FileInput from '@/components/atoms/inputs/fileInput/FileInput';
 import { useUserStore } from '@/store/userStore';
 import FilePreview from '@/components/atoms/filePreview/FilePreview';
-
 import { useQueryClient } from '@tanstack/react-query';
-import { setFlagsFromString } from 'v8';
-import { Console } from 'console';
 
 interface ChattingRoomProps {
   roomId: string | null;
@@ -72,12 +69,12 @@ export default function ChattingRoom({
     const socket = new SockJS(`https://api.dopdang.shop/ws-chat`);
     const stompClient = Stomp.over(socket);
     stompClient.debug = (str: string) => {
-      console.log('🐛 STOMP Debug:', str);
+      //console.log('🐛 STOMP Debug:', str);
     };
     stompClient.connect(
       {},
       (frame: any) => {
-        console.log('STOMP 연결 성공', frame);
+        //console.log('STOMP 연결 성공', frame);
         stompClient.subscribe(`/topic/notice/${senderEmail}`, (messageOutput: any) => {
           const payload = JSON.parse(messageOutput.body);
           //console.log('Received message:', messageOutput);
@@ -247,7 +244,7 @@ export default function ChattingRoom({
     scrollToBottom();
     //console.log('채팅내역', messages);
   }, [messages]);
-  console.log('채팅방', messages);
+
   return (
     <div className="flex gap-24 items-start">
       <Suspense>
