@@ -69,7 +69,7 @@ export default function ChattingRoom({
 
   // WebSocket 연결 함수
   const connectWebSocket = () => {
-    const socket = new SockJS(`${process.env.SERVER_URL}/ws-chat`);
+    const socket = new SockJS(`https://api.dopdang.shop/ws-chat`);
     const stompClient = Stomp.over(socket);
     stompClient.debug = (str: string) => {
       console.log('🐛 STOMP Debug:', str);
@@ -118,7 +118,7 @@ export default function ChattingRoom({
       contentType: contentType,
     };
     try {
-      const res = await fetch(`${process.env.SERVER_URL}/chat/presigned`, {
+      const res = await fetch(`https://api.dopdang.shop/chat/presigned`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(presignPayload),
@@ -184,7 +184,7 @@ export default function ChattingRoom({
     if (!roomId) return;
     try {
       const response = await fetch(
-        `${process.env.SERVER_URL}/chatrooms/${roomId}/read?username=${encodeURIComponent(
+        `https://api.dopdang.shop/chatrooms/${roomId}/read?username=${encodeURIComponent(
           currentUserEmail,
         )}`,
         {
