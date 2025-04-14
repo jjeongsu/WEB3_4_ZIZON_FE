@@ -32,7 +32,7 @@ export default function CleaningFourPage() {
     router.push('/commission/cleaning/step3');
   }
   const onClickNextHandler = () => {
-    if (area === '' ) return;
+    if (area === '' || selectedOption === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/cleaning/step5');
   }
@@ -48,7 +48,7 @@ export default function CleaningFourPage() {
   const onCheckSelectedHandler = (key: string, label: string) => {
     setSelectedOption(key);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return prev;
+      if (prev.length === 0) return [{"추가 서비스": label}];
       const updated = [...prev];
       updated[0]['추가 서비스'] = label;
       return updated;

@@ -27,6 +27,7 @@ export default function CleaningOnePage() {
     router.push('/commission/move/step1');
   }
   const onClickNextHandler = () => {
+    if (selectedCleaning === null) return;
     localStorage.setItem('selectedIndex', JSON.stringify([...selectedOptionList, ...selectedOptionListNewItem]));
     router.push('/commission/cleaning/step2');
   }
