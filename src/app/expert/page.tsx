@@ -20,6 +20,6 @@ export default async function ExpertPage({
   };
 
   const data = await getExpertlist(RequestQuery);
-  console.log('전문가 목록', data);
+
   return <ExpertTemplate expertList={data} />;
 }
