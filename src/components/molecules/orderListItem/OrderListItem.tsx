@@ -12,6 +12,7 @@ import CancelOrderModal from '@/components/organisms/cancelOrderModal/CancelOrde
 import { createReview } from '@/apis/review/createReview';
 import { cancelPayment } from '@/apis/payment/cancelPayment';
 import { toast } from 'sonner';
+import { ApiError } from '@/types/api';
 
 type OrderItemType = Project | Contract;
 
@@ -19,7 +20,6 @@ interface OrderListItemProps {
   item: OrderItemType;
   onClickAskButton: () => void;
   isExpertView?: boolean;
-  expertId?: number;
   paymentOrderId?: string;
 }
 
@@ -59,7 +59,6 @@ export default function OrderListItem({
   item,
   onClickAskButton,
   isExpertView = false,
-  expertId,
   paymentOrderId,
 }: OrderListItemProps) {
   const [imagePath, setImagePath] = useState(
@@ -86,23 +85,45 @@ export default function OrderListItem({
     try {
       const id = 'id' in item ? item.id : item.contractId;
       if (!id) {
-        toast.error('프로젝트 ID 또는 전문가 ID가 없습니다.');
+        toast.error('프로젝트 ID가 없습니다.');
         return;
       }
 
       await createReview({
-        reviewType: 'project',
-        contractId: 'contractId' in item ? item.contractId : null,
-        orderId: id,
-        expertId: expertId || 1,
-        rating: review.rating,
+        projectId: id,
+        score: review.rating,
         content: review.content,
+        imageUrl: imagePath,
       });
 
       toast.success('리뷰가 성공적으로 등록되었습니다.');
       setIsReviewModalOpen(false);
-    } catch (error) {
-      toast.error('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+    } catch (error: unknown) {
+      // ApiError 인스턴스인 경우 처리
+      if (error instanceof ApiError) {
+        const status = error.status || 500;
+        const message = error.message || '알 수 없는 오류가 발생했습니다.';
+
+        switch (status) {
+          case 400:
+            toast.error(`데이터 형식 오류: ${message}`);
+            break;
+          case 401:
+            toast.error('인증이 필요합니다. 로그인 후 다시 시도해주세요.');
+            break;
+          case 403:
+            toast.error('리뷰를 작성할 권한이 없습니다.');
+            break;
+          case 409:
+            toast.error('이미 리뷰가 작성된 계약입니다.');
+            break;
+          default:
+            toast.error(`리뷰 등록에 실패했습니다: ${message}`);
+        }
+      } else {
+        // 일반 에러 처리
+        toast.error('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+      }
       console.error('리뷰 제출 실패:', error);
     }
   };
@@ -121,8 +142,32 @@ export default function OrderListItem({
 
       toast.success(response.message);
       setIsCancelModalOpen(false);
-    } catch (error) {
-      toast.error('주문 취소에 실패했습니다. 다시 시도해주세요.');
+    } catch (error: unknown) {
+      // ApiError 인스턴스인 경우 처리
+      if (error instanceof ApiError) {
+        const status = error.status || 500;
+        const message = error.message || '알 수 없는 오류가 발생했습니다.';
+
+        switch (status) {
+          case 400:
+            toast.error(`데이터 형식 오류: ${message}`);
+            break;
+          case 401:
+            toast.error('인증이 필요합니다. 로그인 후 다시 시도해주세요.');
+            break;
+          case 403:
+            toast.error('주문을 취소할 권한이 없습니다.');
+            break;
+          case 409:
+            toast.error('이미 취소된 주문입니다.');
+            break;
+          default:
+            toast.error(`주문 취소에 실패했습니다: ${message}`);
+        }
+      } else {
+        // 일반 에러 처리
+        toast.error('주문 취소에 실패했습니다. 다시 시도해주세요.');
+      }
       console.error('주문 취소 실패:', error);
     }
   };
