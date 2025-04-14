@@ -205,7 +205,9 @@ export default function OrderListItem({
           text={buttonConfig.text}
           state={buttonConfig.state}
           size="fit"
-          onClick={handleButtonClick}
+          onClick={() => {
+            handleButtonClick();
+          }}
           disabled={false}
         />
       </article>

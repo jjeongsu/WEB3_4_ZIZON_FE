@@ -1,7 +1,7 @@
 'use client'
 import React, { Suspense, useEffect, useState } from 'react';
 import CommissionDetailTemplate from '@/components/templates/commissionTemplate/CommissionDetailTemplate';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getProjectId, ProjectIdResponse } from '@/apis/project/getProjectId';
 
 export default function CommissionIdPage() {

@@ -10,12 +10,22 @@ import LoadingSpinner from '@/components/atoms/loadingSpinner/LoadingSpinner';
 import ErrorState from '@/components/molecules/errorState/ErrorState';
 import EmptyState from '@/components/molecules/emptyState/EmptyState';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
+import ProjectViewModal from '@/components/ui/ProjectViewModal';
 
 export default function MyProjectPage() {
   const [selectedState, setSelectedState] = useState<ProjectStatus | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [projectId, setProjectId] = useState<number | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
   const pageSize = 10;
 
+  const modalCloseHandler = () => {
+    setModalOpen(false);
+  }
+  const onClickProjectList = (id: number) => {
+    setProjectId(id);
+    setModalOpen(true);
+  }
   // useQuery를 사용하여 프로젝트 데이터 가져오기
   const { data, isLoading, isError } = useQuery({
     queryKey: ['myProjects', currentPage],
@@ -91,6 +101,7 @@ export default function MyProjectPage() {
 
   return (
     <div className="w-full">
+      {isModalOpen && projectId ? <ProjectViewModal projectId={projectId} modalCloseHandler={modalCloseHandler}/> : null}
       <h1 className="text-20 font-semibold mb-24">내가 구매한 프로젝트</h1>
       <SellStateTabContainer
         counts={counts}
@@ -107,7 +118,7 @@ export default function MyProjectPage() {
           </div>
         ) : (
           <>
-            <OrderList orders={filteredProjects} onAskButtonClick={handleAskButtonClick} />
+            <OrderList orders={filteredProjects} onClickProject={onClickProjectList} onAskButtonClick={handleAskButtonClick} />
 
             {/* 더 보기 버튼 */}
             {data?.hasNext && (

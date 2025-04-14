@@ -18,7 +18,7 @@ export interface ProjectIdResponse {
 }
 
 export const getProjectId = async ({ id }: ProjectIdRequest) => {
-  const response = await APIBuilder.get(`/projects/${id}`)
+  const response = await APIBuilder.get(`/projects/detail/${id}`)
     .headers({
       'Content-Type': 'application/json',
     })
