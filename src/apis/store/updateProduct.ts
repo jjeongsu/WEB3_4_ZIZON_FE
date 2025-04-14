@@ -29,7 +29,7 @@ export default async function updateProduct(
   productId: number,
   productData: UpdateProductRequest,
 ): Promise<UpdateProductResponse> {
-  const response = await APIBuilder.put(`/products/${productId}`, productData)
+  const response = await APIBuilder.patch(`/products/${productId}`, productData)
     .timeout(10000)
     .build()
     .call<UpdateProductResponse>();
