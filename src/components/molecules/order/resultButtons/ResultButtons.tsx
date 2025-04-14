@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 export default function ResultButtons() {
   const router = useRouter();
 
-  const onOrderListClick = () => router.push('/myPage/boughtProducts');
+  const onOrderListClick = () => router.push('/myPage/purchasedProducts');
   const onHomeClick = () => router.push('/');
 
   return (

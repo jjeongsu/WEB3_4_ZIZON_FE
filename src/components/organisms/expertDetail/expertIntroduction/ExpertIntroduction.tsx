@@ -93,10 +93,10 @@ export default function ExpertIntroduction({
 
       <Didivder />
 
-      {portfolioImage === "" ? null : (
+      {portfolioImage === '' ? null : (
         <div>
           <h3 className="font-bold text-20 text-black12 mb-24">포트폴리오</h3>
-          <Image src={portfolioImage} alt={''} />
+          <Image src={portfolioImage} alt={'portfolio'} width={700} height={600} />
         </div>
       )}
       {/* 리뷰 영역 */}
