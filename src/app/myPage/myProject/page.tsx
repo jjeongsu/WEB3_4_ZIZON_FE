@@ -21,11 +21,11 @@ export default function MyProjectPage() {
 
   const modalCloseHandler = () => {
     setModalOpen(false);
-  }
+  };
   const onClickProjectList = (id: number) => {
     setProjectId(id);
     setModalOpen(true);
-  }
+  };
   // useQuery를 사용하여 프로젝트 데이터 가져오기
   const { data, isLoading, isError } = useQuery({
     queryKey: ['myProjects', currentPage],
@@ -100,8 +100,10 @@ export default function MyProjectPage() {
   }
 
   return (
-    <div className="w-full">
-      {isModalOpen && projectId ? <ProjectViewModal projectId={projectId} modalCloseHandler={modalCloseHandler}/> : null}
+    <div className="w-full pt-24 pl-64">
+      {isModalOpen && projectId ? (
+        <ProjectViewModal projectId={projectId} modalCloseHandler={modalCloseHandler} />
+      ) : null}
       <h1 className="text-20 font-semibold mb-24">내가 구매한 프로젝트</h1>
       <SellStateTabContainer
         counts={counts}
@@ -118,7 +120,11 @@ export default function MyProjectPage() {
           </div>
         ) : (
           <>
-            <OrderList orders={filteredProjects} onClickProject={onClickProjectList} onAskButtonClick={handleAskButtonClick} />
+            <OrderList
+              orders={filteredProjects}
+              onClickProject={onClickProjectList}
+              onAskButtonClick={handleAskButtonClick}
+            />
 
             {/* 더 보기 버튼 */}
             {data?.hasNext && (
