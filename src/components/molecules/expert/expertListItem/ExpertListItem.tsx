@@ -3,11 +3,11 @@ import MediumTag from '@/components/atoms/tags/mediumTag/MediumTag';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const THEME: Record<'이사/청소' | '설치/수리' | '과외' | '취미/자기계발', string> = {
-  '이사/청소': 'lightBlue',
-  '설치/수리': 'lightGreen',
-  과외: 'lightPurple',
-  '취미/자기계발': 'lightOrange',
+const THEME = {
+  1000: 'lightBlue',
+  2000: 'lightGreen',
+  3000: 'lightPurple',
+  4000: 'lightOrange',
 };
 
 function ExpertListItem({ expert }: { expert: ExpertListItemType }) {
@@ -24,10 +24,7 @@ function ExpertListItem({ expert }: { expert: ExpertListItemType }) {
           />
         </div>
         <div className="flex gap-8 mb-16">
-          <MediumTag
-            theme={THEME[expert.categoryName as keyof typeof THEME]}
-            text={`${expert.categoryName}`}
-          />
+          <MediumTag theme={THEME[expert.mainCategoryId]} text={`${expert.categoryName}`} />
           <MediumTag theme="" text={`${expert.careerYears}년 경력`} />
         </div>
         <div className="flex flex-col">

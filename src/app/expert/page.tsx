@@ -20,6 +20,6 @@ export default async function ExpertPage({
   };
 
   const data = await getExpertlist(RequestQuery);
-
+  console.log('data', data);
   return <ExpertTemplate expertList={data} />;
 }
