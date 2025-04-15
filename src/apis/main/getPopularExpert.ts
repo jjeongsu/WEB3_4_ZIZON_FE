@@ -18,7 +18,7 @@ export const getSortedExpertsByCategory = async (): Promise<SortedExperts> => {
   try {
     const response = await APIBuilder.get('/experts').build().call<Expert[]>();
     const experts: Expert[] = response.data;
-    console.log("experts",experts)
+
     const sortedMap: SortedExperts = {};
     const allTopExperts: Expert[] = [];
 

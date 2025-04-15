@@ -18,7 +18,7 @@ function CommissionListItem(commission: ProjectType) {
       onClick={onClickHandler}
       className="w-740 flex justify-between bg-black1 gap-44 px-44 py-40 rounded-2xl hover:shadow-style2 transition-all duration-300 cursor-pointer"
     >
-      <div className="flex flex-col gap-40">
+      <div className="flex flex-col gap-40 w-400">
         <div className="flex flex-col gap-24">
           <div className="flex gap-8 items-center">
             <Image src="/icons/MapPin.svg" alt="지도 핀" width={15} height={19} />
