@@ -30,7 +30,7 @@ function UserStateTabContainer({ isState }: UserStateTabContainerProps) {
       <VerticalTabItem
         name="myProject"
         isFocused={pathname === '/myPage/myProject'}
-        text="내가 구매한 프로젝트"
+        text="내가 의뢰한 프로젝트"
         onClick={handleTabClick}
         size="small"
       />
