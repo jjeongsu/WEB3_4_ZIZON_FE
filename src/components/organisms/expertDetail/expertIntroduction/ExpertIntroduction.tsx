@@ -6,8 +6,9 @@ import ServiceIntroduction from '@/components/atoms/texts/serviceIntroduction/Se
 import { ReactElement, useState } from 'react';
 import Briefcase from 'public/icons/Briefcase.svg';
 import Image from 'next/image';
-import ReviewItem, { ReviewItemProps } from '@/components/molecules/reviewItem/ReviewItem';
+import ReviewItem from '@/components/molecules/reviewItem/ReviewItem';
 import { Review } from '@/types/review';
+import { ExpertReview } from '@/apis/review/getExpertReviews';
 interface ExpertIntroduction {
   introduction: string;
   major_category: string;
@@ -15,7 +16,7 @@ interface ExpertIntroduction {
   portfolioImage: string;
   career_years: number;
   certification?: string[];
-  ReviewList?: Review[];
+  ReviewList?: ExpertReview[];
 }
 const Didivder = () => <div className="w-full h-[1px] bg-black4" />;
 

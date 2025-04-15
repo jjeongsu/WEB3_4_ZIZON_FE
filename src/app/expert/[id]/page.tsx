@@ -5,7 +5,6 @@ import RequestOfferBox from '@/components/molecules/expertDetail/requestOfferBox
 import ExpertIntroduction from '@/components/organisms/expertDetail/expertIntroduction/ExpertIntroduction';
 import ExpertProfile from '@/components/organisms/expertDetail/expertProfile/ExpertProfile';
 import ExpertDetailTemplate from '@/components/templates/expertDetailTemplate/ExpertDetailTemplate';
-import { get } from 'http';
 
 export default async function ExpertIdPage({
   params,
