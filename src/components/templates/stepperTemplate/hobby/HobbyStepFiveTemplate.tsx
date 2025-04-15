@@ -27,7 +27,7 @@ export default function HobbyStepFiveTemplate({selectedOptionListProps, checkSel
       <CommissionTopBox title={'6.서비스 날짜 및 지역'} progressStep={4} isBefore={true} onClickBefore={onClickBefore} />
       <div className='flex mt-24 items-start w-full'>
         <div className='mr-24 w-full bg-black1 rounded-lg pb-40'>
-          <CheckSelectBox checkSelectBoxProps={checkSelectBoxProps} title={'어떤 교과 외 과목을 공부하고 싶나요?'} />
+          <CheckSelectBox checkSelectBoxProps={checkSelectBoxProps} title={'서비스를 받고 싶은 날이 언제인가요?'} />
           {checkSelected === 'particular' ? <DatePickerWithTitle title={'날짜를 선택해주세요'} selectedDay={selectedDay} setSelectedDay={setSelectedDay}/> : null}
           <div className="mt-32">
             <TextInputWithTitle title={'서비스 지역을 선택해주세요'} id={id} placeholder={placeholder} type={type} value={value} onChange={onChange}/>
