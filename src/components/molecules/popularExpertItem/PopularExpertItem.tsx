@@ -13,7 +13,7 @@ export default function PopularExpertItem({
   profileImage,
   expertId,
   averageScore,
-  review,
+  reviewCounts,
   mainCategoryId,
 }: Expert) {
   const [imagePath, setImagePath] = useState(profileImage);
@@ -43,7 +43,7 @@ export default function PopularExpertItem({
           {/*<button onClick={() => onLikeClick(expertId)} className="cursor-pointer h-32">*/}
           {/*  <LikeTag type={isLikeOn} count={likeCount} />*/}
           {/*</button>*/}
-          <StarTag rating={averageScore} reviewCount={review} />
+          <StarTag rating={averageScore} reviewCount={reviewCounts} />
         </div>
       </div>
     </Link>

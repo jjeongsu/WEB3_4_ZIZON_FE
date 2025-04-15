@@ -13,7 +13,6 @@ export default async function MakeOfferPage({
   const { projectId, hasChat } = await searchParams;
 
   // 해당 Id로 프로젝트 정보 조회
-
   const projectData = await getProject({ projectId });
 
   return (

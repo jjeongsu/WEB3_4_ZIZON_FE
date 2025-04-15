@@ -1,4 +1,5 @@
 import { APIBuilder } from '@/utils/APIBuilder';
+import { Console } from 'console';
 import { cookies } from 'next/headers';
 
 export interface ProjectRequestType {
@@ -29,7 +30,7 @@ export default async function getProject({
     console.error('Access token not found in cookies');
   }
 
-  const response = await APIBuilder.get(`/projects/${projectId}`)
+  const response = await APIBuilder.get(`/projects/detail/${projectId}`)
     .headers({
       Cookie: `accessToken=${token}`,
       'Content-Type': 'application/json',

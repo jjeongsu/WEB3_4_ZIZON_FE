@@ -34,6 +34,7 @@ export default function ClientChattingInfo({
       {offerData && expertData && (
         <ChattingButtonGroup offerInfo={offerData} expertInfo={expertData} roomId={roomId} />
       )}
+
       {offerData && expertData && (
         <OfferInfo
           offerInfo={offerData}
