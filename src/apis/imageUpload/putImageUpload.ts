@@ -11,8 +11,9 @@ export const putImageUpload = async ({tableUnionType, file}: PutImageUpload) => 
     const postImageUploadResponse = await postImageUpload({folder: tableUnionType, fileName: 'testImage.webp', contentType: 'image/webp'});
     const compressedFile = await compressImage(file);
     const { presignedUrl, accessUrl } = postImageUploadResponse;
-    await putS3Upload(presignedUrl, compressedFile);
-
+    console.log("presignedUrl, accessUrl",presignedUrl, accessUrl)
+    const test = await putS3Upload(presignedUrl, compressedFile);
+    console.log("putS3Upload", test)
     return accessUrl
   } catch (err) {
     console.error('압축 중 오류 발생:', err);
