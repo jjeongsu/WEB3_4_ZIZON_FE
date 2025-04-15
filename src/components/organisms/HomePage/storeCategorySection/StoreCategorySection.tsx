@@ -17,7 +17,7 @@ const CATEGORY_ARRAY: GradientCategoryItemProps[] = [
   {
     categoryName: '코드',
     caption: '프로젝트를 위한 완벽한 도구',
-    linkTo: '/store?category=digital-itdesign',
+    linkTo: '/store?search=%EC%BD%94%EB%93%9C',
     imageSrc: '/images/CategoryCode.jpg',
   },
   {
