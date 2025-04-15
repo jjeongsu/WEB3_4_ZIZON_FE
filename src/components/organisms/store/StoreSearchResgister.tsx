@@ -5,8 +5,8 @@ import SearchBar from '@/components/atoms/inputs/searchBar/SearchBar';
 import useSetSearchParams from '@/hooks/useSetSearchParams';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-export default function StoreSearchRegister() {
-  const [search, setSearch] = useState<string>('');
+export default function StoreSearchRegister({ searchKeyword }: { searchKeyword: string }) {
+  const [search, setSearch] = useState<string>(searchKeyword);
   const setSearchParams = useSetSearchParams();
   const router = useRouter();
 
