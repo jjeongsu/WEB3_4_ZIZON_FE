@@ -94,12 +94,15 @@ export default function CommonEndPage() {
       } finally {
         deleteCookie('target_expert_id');
       }
+    } else {
+      deleteCookie('target_expert_id');
+      router.push(`/commission/${response.projectId}`);
     }
   };
   const titleChangeHandler = (value: string) => {
     setTile(value);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return [{ 제목: value }];
+      if (prev.length === 0) return [{ '제목': value }];
       const updated = [...prev];
       updated[0]['제목'] = value;
       return updated;
@@ -109,7 +112,7 @@ export default function CommonEndPage() {
     if (value.length > 99) return;
     setSubtitle(value);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return [{ 부제목: value }];
+      if (prev.length === 0) return [{ '부제목': value }];
       const updated = [...prev];
       updated[0]['부제목'] = value;
       return updated;
@@ -118,7 +121,7 @@ export default function CommonEndPage() {
   const priceChangeHandler = (value: string) => {
     setPrice(value);
     setSelectedOptionListNewItem(prev => {
-      if (prev.length === 0) return [{ 비용: value }];
+      if (prev.length === 0) return [{ '비용': value }];
       const updated = [...prev];
       updated[0]['비용'] = value;
       return updated;

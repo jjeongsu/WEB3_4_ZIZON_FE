@@ -11,6 +11,7 @@ import ReviewModal from '@/components/organisms/reviewModal/ReviewModal';
 import CancelOrderModal from '@/components/organisms/cancelOrderModal/CancelOrderModal';
 import { createReview } from '@/apis/review/createReview';
 import { cancelPayment } from '@/apis/payment/cancelPayment';
+import { completeContract } from '@/apis/contract/completeContract';
 import { toast } from 'sonner';
 import { ApiError } from '@/types/api';
 
@@ -19,13 +20,14 @@ type OrderItemType = Project | Contract;
 interface OrderListItemProps {
   item: OrderItemType;
   onClickAskButton: () => void;
+  onClickProject: () => void;
   isExpertView?: boolean;
   paymentOrderId?: string;
 }
 
 interface ButtonStyle {
   text: string;
-  state: 'default' | 'dark' | 'red';
+  state: 'default' | 'dark' | 'red' | 'blue';
 }
 
 const buttonStyle: Record<ProjectStatus | ContractStatus, ButtonStyle> = {
@@ -42,8 +44,8 @@ const buttonStyle: Record<ProjectStatus | ContractStatus, ButtonStyle> = {
     state: 'default',
   },
   IN_PROGRESS: {
-    text: '문의하기',
-    state: 'default',
+    text: '완료하기',
+    state: 'blue',
   },
   COMPLETED: {
     text: '리뷰작성',
@@ -58,6 +60,7 @@ const buttonStyle: Record<ProjectStatus | ContractStatus, ButtonStyle> = {
 export default function OrderListItem({
   item,
   onClickAskButton,
+  onClickProject,
   isExpertView = false,
   paymentOrderId,
 }: OrderListItemProps) {
@@ -66,6 +69,7 @@ export default function OrderListItem({
   );
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const stateConfig = sellStateConfig[item.status];
   const buttonConfig = isExpertView
     ? { text: '문의하기', state: 'default' as const }
@@ -76,8 +80,55 @@ export default function OrderListItem({
       setIsReviewModalOpen(true);
     } else if (item.status === 'CANCELLED' && !isExpertView) {
       setIsCancelModalOpen(true);
+    } else if (item.status === 'IN_PROGRESS' && !isExpertView) {
+      handleCompleteContract();
     } else {
       onClickAskButton();
+    }
+  };
+
+  const handleCompleteContract = async () => {
+    try {
+      setIsLoading(true);
+
+      // Contract 타입인지 확인
+      if ('contractId' in item) {
+        await completeContract(item.contractId);
+        toast.success('계약이 성공적으로 완료 처리되었습니다.');
+        // 상태 업데이트를 위해 페이지 새로고침 또는 상태 관리 라이브러리 사용
+        window.location.reload();
+      } else {
+        toast.error('계약 정보가 올바르지 않습니다.');
+      }
+    } catch (error: unknown) {
+      // ApiError 인스턴스인 경우 처리
+      if (error instanceof ApiError) {
+        const status = error.status || 500;
+        const message = error.message || '알 수 없는 오류가 발생했습니다.';
+
+        switch (status) {
+          case 400:
+            toast.error(`데이터 형식 오류: ${message}`);
+            break;
+          case 401:
+            toast.error('인증이 필요합니다. 로그인 후 다시 시도해주세요.');
+            break;
+          case 403:
+            toast.error('계약을 완료 처리할 권한이 없습니다.');
+            break;
+          case 404:
+            toast.error('계약을 찾을 수 없습니다.');
+            break;
+          default:
+            toast.error(`계약 완료 처리에 실패했습니다: ${message}`);
+        }
+      } else {
+        // 일반 에러 처리
+        toast.error('계약 완료 처리에 실패했습니다. 다시 시도해주세요.');
+      }
+      console.error('계약 완료 처리 실패:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -177,7 +228,15 @@ export default function OrderListItem({
 
   return (
     <>
-      <article className="flex bg-black1 border border-black3 p-20 rounded-xl items-center justify-between">
+      <article
+        className="flex bg-black1 border border-black3 p-20 rounded-xl items-center justify-between cursor-pointer"
+        onClick={e => {
+          const target = e.target as HTMLElement;
+          // 버튼을 클릭한 경우, onClickProject 실행하지 않음
+          if (target.closest('button')) return;
+          onClickProject();
+        }}
+      >
         <div className="flex items-center gap-16">
           <div className="w-85 h-85 rounded-lg overflow-hidden">
             <Image
@@ -205,8 +264,10 @@ export default function OrderListItem({
           text={buttonConfig.text}
           state={buttonConfig.state}
           size="fit"
-          onClick={handleButtonClick}
-          disabled={false}
+          onClick={() => {
+            handleButtonClick();
+          }}
+          disabled={isLoading}
         />
       </article>
       <ReviewModal

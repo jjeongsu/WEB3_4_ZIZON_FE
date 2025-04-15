@@ -6,7 +6,7 @@ export interface ReviewItemProps {
   profile_image: string;
   name: string;
   content: string;
-  review_type: string;
+  summary: string;
   created_at: Date;
   rating: number;
 }
@@ -15,7 +15,7 @@ function ReviewItem({
   profile_image,
   name,
   content,
-  review_type,
+  summary,
   created_at,
   rating,
 }: ReviewItemProps) {
@@ -35,7 +35,7 @@ function ReviewItem({
               <span className="text-13 font-medium text-black6">{name}</span>
               <StarDefault rating={rating} />
             </div>
-            <span className="text-16 font-medium text-black10">{review_type}</span>
+            <span className="text-16 font-medium text-black10">{summary}</span>
           </div>
         </div>
         <p className="text-16 font-regular text-black7 leading-[140%]">{content}</p>

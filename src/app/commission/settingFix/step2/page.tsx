@@ -56,7 +56,9 @@ export default function SettingFixTwoPage() {
   };
 
   const onBeforeHandler = () => {
-    localStorage.setItem('selectedIndex', JSON.stringify(selectedOptionList));
+    const copyList = selectedOptionList;
+    copyList.pop();
+    localStorage.setItem('selectedIndex', JSON.stringify(copyList));
     router.push('/commission/settingFix/step1');
   };
   const addressChangeHandler = (value: string) => {

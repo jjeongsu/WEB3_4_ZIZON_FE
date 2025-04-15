@@ -1,12 +1,14 @@
 import { APIBuilder } from '@/utils/APIBuilder';
 
-interface Expert {
+export interface Expert {
   name: string;
   categoryName: string;
   careerYears: number;
   introduction: string;
   profileImage: string;
   expertId: number;
+  averageScore: number;
+  review: number;
   mainCategoryId: number;
 }
 
@@ -16,7 +18,7 @@ export const getSortedExpertsByCategory = async (): Promise<SortedExperts> => {
   try {
     const response = await APIBuilder.get('/experts').build().call<Expert[]>();
     const experts: Expert[] = response.data;
-
+    console.log("experts",experts)
     const sortedMap: SortedExperts = {};
     const allTopExperts: Expert[] = [];
 
@@ -37,7 +39,6 @@ export const getSortedExpertsByCategory = async (): Promise<SortedExperts> => {
         allTopExperts.push(sortedMap[category][0]);
       }
     }
-
     sortedMap['전체'] = allTopExperts;
 
     return sortedMap;
