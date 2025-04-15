@@ -24,7 +24,6 @@ export default async function getMyPurchasedProducts({
       .build()
       .call<PurchasedProductsResponseType>();
 
-    console.log('API 응답 성공:', response.data);
     return response.data;
   } catch (error) {
     console.error('API 요청 실패:', error);
