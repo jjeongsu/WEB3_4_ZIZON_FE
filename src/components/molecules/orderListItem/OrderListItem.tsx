@@ -14,6 +14,7 @@ import { cancelPayment } from '@/apis/payment/cancelPayment';
 import { completeContract } from '@/apis/contract/completeContract';
 import { toast } from 'sonner';
 import { ApiError } from '@/types/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 type OrderItemType = Project | Contract;
 
@@ -74,6 +75,7 @@ export default function OrderListItem({
   const buttonConfig = isExpertView
     ? { text: '문의하기', state: 'default' as const }
     : buttonStyle[item.status];
+  const queryClient = useQueryClient();
 
   const handleButtonClick = () => {
     if (item.status === 'COMPLETED' && !isExpertView) {
@@ -95,8 +97,8 @@ export default function OrderListItem({
       if ('contractId' in item) {
         await completeContract(item.contractId);
         toast.success('계약이 성공적으로 완료 처리되었습니다.');
-        // 상태 업데이트를 위해 페이지 새로고침 또는 상태 관리 라이브러리 사용
-        window.location.reload();
+        // 상태 업데이트를 위해 React Query의 invalidateQueries 사용
+        queryClient.invalidateQueries({ queryKey: ['myProjects'] });
       } else {
         toast.error('계약 정보가 올바르지 않습니다.');
       }
