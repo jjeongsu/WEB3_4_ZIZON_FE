@@ -1,4 +1,5 @@
 import { APIBuilder } from '@/utils/APIBuilder';
+import { Console } from 'console';
 import { cookies } from 'next/headers';
 
 export interface ProjectRequestType {
@@ -39,5 +40,6 @@ export default async function getProject({
     .build()
     .call<ProjectResponseType>();
 
+  console.log('프로젝트 상세정보', response.data);
   return response.data;
 }
