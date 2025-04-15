@@ -97,7 +97,7 @@ export default function MyReviewPage() {
   }
 
   return (
-    <div className="w-full max-w-1200 mx-auto px-20 py-40">
+    <div className="w-full max-w-1200 pt-24 pl-64">
       <h1 className="text-24 font-bold mb-40">내가 쓴 리뷰</h1>
 
       {isInitialLoad ? (
