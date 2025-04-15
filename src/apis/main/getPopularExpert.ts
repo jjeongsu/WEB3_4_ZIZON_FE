@@ -8,7 +8,7 @@ export interface Expert {
   profileImage: string;
   expertId: number;
   averageScore: number;
-  review: number;
+  reviewCounts: number;
   mainCategoryId: number;
 }
 
