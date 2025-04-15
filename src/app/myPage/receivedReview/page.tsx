@@ -2,17 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useUserStore } from '@/store/userStore';
 import { getExpertReviews } from '@/apis/review/getExpertReviews';
-import { getProjectById } from '@/apis/project/getProjectById';
 import ReviewItem from '@/components/molecules/reviewItem/ReviewItem';
 import EmptyState from '@/components/molecules/emptyState/EmptyState';
 import LoadingSpinner from '@/components/atoms/loadingSpinner/LoadingSpinner';
 import ErrorState from '@/components/molecules/errorState/ErrorState';
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
-import { Project } from '@/types/project';
-import { ReviewWithUI } from '@/types/review';
+import { Review } from '@/types/review';
 
 const PAGE_SIZE = 10;
 
@@ -84,25 +82,8 @@ export default function ReceivedReviewPage() {
   };
 
   // 리뷰 데이터 추출
-  const reviews: ReviewWithUI[] = data?.pages.flatMap(page => page.reviews) || [];
+  const reviews = data?.pages.flatMap(page => page.reviews) || [];
   const isEmpty = !isLoading && reviews.length === 0;
-
-  // 프로젝트 정보 가져오기
-  const projectQueries = useQueries({
-    queries: reviews.map(review => ({
-      queryKey: ['project', review.projectId],
-      queryFn: () => getProjectById(review.projectId),
-      enabled: !!review.projectId,
-    })),
-  });
-
-  // 프로젝트 정보 매핑
-  const projectMap = new Map<number, Project>();
-  projectQueries.forEach((query, index) => {
-    if (query.data && reviews[index]) {
-      projectMap.set(reviews[index].projectId, query.data);
-    }
-  });
 
   // 에러 처리
   if (isError) {
@@ -119,7 +100,7 @@ export default function ReceivedReviewPage() {
   }
 
   return (
-    <div className="w-full max-w-1200 mx-auto px-20 py-40">
+    <div className="w-full max-w-1200 pt-24 pl-64">
       <h1 className="text-24 font-bold mb-40">내가 받은 리뷰</h1>
 
       {isInitialLoad ? (
@@ -132,21 +113,18 @@ export default function ReceivedReviewPage() {
           description="프로젝트를 완료하고 리뷰를 받아보세요"
         />
       ) : (
-        <div className="flex flex-col gap-40">
-          {reviews.map((review, index) => {
-            const project = projectMap.get(review.projectId);
-            return (
-              <ReviewItem
-                key={`review-${review.projectId}-${index}`}
-                profile_image={review.userProfileImage || '/images/DefaultImage.png'}
-                name={review.userName || '익명'}
-                content={review.content}
-                review_type={project ? project.title : `프로젝트 ${review.projectId}`}
-                created_at={review.createdAt ? new Date(review.createdAt) : new Date()}
-                rating={review.score}
-              />
-            );
-          })}
+        <div className="flex flex-col gap-32">
+          {reviews.map((review: Review, index) => (
+            <ReviewItem
+              key={`review-${review.reviewId}-${index}`}
+              profile_image={review.expertProfileImage || '/images/DefaultImage.png'}
+              name={review.expertName || '익명'}
+              content={review.content}
+              summary={review.summary}
+              created_at={new Date(review.createdAt)}
+              rating={review.score}
+            />
+          ))}
 
           {/* 더 보기 버튼 */}
           {hasNextPage && (

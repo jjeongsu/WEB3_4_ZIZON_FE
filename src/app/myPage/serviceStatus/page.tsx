@@ -102,7 +102,7 @@ export default function ServiceStatusPage() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-24 pl-64">
       <h3 className="text-20 font-semibold mb-24">서비스 현황</h3>
 
       <SellStateTabContainer
