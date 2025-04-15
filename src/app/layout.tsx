@@ -7,6 +7,9 @@ import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: '돕당 | DopDang',
+  icons: {
+    icon: '/favicon.ico',
+  },
   applicationName: '돕당 | DopDang',
   keywords: [
     '돕당',
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
     siteName: '돕당 | DopDang',
     images: [
       {
-        url: '/public/images/dopdang-og.png',
+        url: 'https://devcouse4-team16-bucket.s3.ap-northeast-2.amazonaws.com/portfolios/66ff8d9d-84d2-4c35-9057-903ec6ae5299_test.png',
         width: 1200,
         height: 630,
         alt: '돕당 전문가 매칭 플랫폼',
