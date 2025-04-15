@@ -2,13 +2,12 @@
 import StandardButton from '@/components/atoms/buttons/standardButton/StandardButton';
 import NumberInput from '@/components/atoms/inputs/numberInput/NumberInput';
 import InputLabel from '@/components/atoms/texts/inputLabel/InputLabel';
-import LabeledInput from '@/components/molecules/labeledInput/LabeledInput';
 import LabeledTextArea from '@/components/molecules/labeledTextArea/LabeledTextArea';
 import { useState } from 'react';
 
 export interface OfferFormType {
-  charge: number;
-  estimateDate: number;
+  charge: number | null;
+  estimateDate: number | null;
   information: string | null;
 }
 
@@ -18,8 +17,8 @@ interface OfferFormProps {
 
 export default function OfferForm({ onSubmit }: OfferFormProps) {
   const [value, setValue] = useState<OfferFormType>({
-    charge: 0,
-    estimateDate: 0,
+    charge: null,
+    estimateDate: null,
     information: null,
   });
 
