@@ -30,7 +30,7 @@ export default async function getProject({
     console.error('Access token not found in cookies');
   }
 
-  const response = await APIBuilder.get(`/projects/${projectId}`)
+  const response = await APIBuilder.get(`/projects/detail/${projectId}`)
     .headers({
       Cookie: `accessToken=${token}`,
       'Content-Type': 'application/json',
@@ -40,6 +40,5 @@ export default async function getProject({
     .build()
     .call<ProjectResponseType>();
 
-  console.log('프로젝트 상세정보', response.data);
   return response.data;
 }
