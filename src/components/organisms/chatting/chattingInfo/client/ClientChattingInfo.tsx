@@ -31,9 +31,8 @@ export default function ClientChattingInfo({
 
   return (
     <div className="w-full max-w-402 flex flex-col gap-16">
-      {offerData && expertData && (
-        <ChattingButtonGroup offerInfo={offerData} expertInfo={expertData} roomId={roomId} />
-      )}
+      <ChattingButtonGroup offerInfo={offerData} expertInfo={expertData} roomId={roomId} />
+
       {offerData && expertData && (
         <OfferInfo
           offerInfo={offerData}

@@ -20,8 +20,6 @@ export default function MakeOfferTemplate({ projectSummary, hasChat }: MakeOffer
   const offerMutation = useMutation({
     mutationFn: (request: PostOfferRequestType) => postOffer(request),
     onSuccess: async () => {
-      alert('견적서가 성공적으로 전송되었습니다.');
-
       // 만약 이미 채팅방이 있다면 채팅방은 생성하지 않고 그냥 채팅방으로 이동
       if (hasChat) {
         router.push('/expert/chat');
@@ -29,7 +27,7 @@ export default function MakeOfferTemplate({ projectSummary, hasChat }: MakeOffer
       } else {
         try {
           const response = await postCreateRoom(projectId);
-          alert('채팅방 생성 성공');
+          alert('전문가와 채팅방이 생성되었습니다. 채팅방으로 이동합니다.');
           router.push('/expert/chat');
         } catch (error) {
           alert(`채팅방 생성 실패 ${error}`);
