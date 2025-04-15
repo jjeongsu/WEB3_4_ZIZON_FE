@@ -17,7 +17,7 @@ export default function ExpertTemplate({ expertList }: { expertList: ExpertListR
         </Suspense>
         {/* 컨텐츠 영역 */}
         <div className="w-full flex flex-col gap-16">
-          <SortButtons />
+          {/* <SortButtons /> */}
 
           <Suspense fallback={<div className="w-full h-100 bg-black1 animate-pulse">로딩중</div>}>
             <ExpertList>
