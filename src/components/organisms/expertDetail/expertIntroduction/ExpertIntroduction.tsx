@@ -7,6 +7,7 @@ import { ReactElement, useState } from 'react';
 import Briefcase from 'public/icons/Briefcase.svg';
 import Image from 'next/image';
 import ReviewItem, { ReviewItemProps } from '@/components/molecules/reviewItem/ReviewItem';
+import { Review } from '@/types/review';
 interface ExpertIntroduction {
   introduction: string;
   major_category: string;
@@ -14,7 +15,7 @@ interface ExpertIntroduction {
   portfolioImage: string;
   career_years: number;
   certification?: string[];
-  ReviewList?: ReviewItemProps[];
+  ReviewList?: Review[];
 }
 const Didivder = () => <div className="w-full h-[1px] bg-black4" />;
 

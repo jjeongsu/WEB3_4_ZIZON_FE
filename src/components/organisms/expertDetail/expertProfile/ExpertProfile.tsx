@@ -7,7 +7,7 @@ interface ExpertProfileProps {
   profileImageUrl: string;
   name: string;
   introduction: string;
-  categoryId: ProjectCategoryIdType;
+  categoryName: string;
   ExpertInfoCardComponent: ReactElement<typeof ExpertInfoCard>;
 }
 
@@ -15,11 +15,9 @@ export default function ExpertProfile({
   profileImageUrl,
   name,
   introduction,
-  categoryId,
+  categoryName,
   ExpertInfoCardComponent,
 }: ExpertProfileProps) {
-  const certifiedName = PROJECT_CATEGORY[categoryId];
-
   return (
     <div className="flex flex-col gap-24">
       <Image
@@ -30,7 +28,7 @@ export default function ExpertProfile({
         alt="expert-profile-image"
       />
       <div className="flex flex-col gap-16">
-        <CertificationTag text={certifiedName} />
+        <CertificationTag text={categoryName} />
         <h1 className="text-28 font-bold text-black12">{name}</h1>
         <h2 className="text-16 font-regular text-black10">{introduction}</h2>
       </div>
