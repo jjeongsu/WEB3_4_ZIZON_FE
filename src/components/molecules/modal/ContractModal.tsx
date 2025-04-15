@@ -16,14 +16,14 @@ interface ContractModalProps {
 }
 
 export interface FormValue {
-  servicePrice: number;
+  servicePrice: number | null;
   serviceStartDate: string;
   serviceEndDate: string;
 }
 
 export default function ContractModal({ onClose, offerData, onSubmit }: ContractModalProps) {
   const [formValue, setFormValue] = useState<FormValue>({
-    servicePrice: 0,
+    servicePrice: null,
     serviceStartDate: '',
     serviceEndDate: '',
   });
