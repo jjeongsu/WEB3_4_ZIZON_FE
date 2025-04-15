@@ -6,7 +6,36 @@ import DesktopNavigation from '@/components/organisms/desktopNavigation/DesktopN
 import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
-  title: '💫DopDang',
+  title: '돕당 | DopDang',
+  applicationName: '돕당 | DopDang',
+  keywords: [
+    '돕당',
+    'DopDang',
+    '전문가',
+    '전문가 매칭',
+    '전문가 추천',
+    '전문가 서비스',
+    '전문가 플랫폼',
+  ],
+  authors: [{ name: '돕당', url: 'https://www.dopdang.shop' }],
+  creator: '돕당',
+  publisher: '돕당',
+  openGraph: {
+    title: '💫 돕당 | DopDang',
+    description: '전문가 매칭 플랫폼, 돕당에서 당신에게 딱 맞는 전문가를 찾아보세요!',
+    url: 'https://www.dopdang.shop',
+    siteName: '돕당 | DopDang',
+    images: [
+      {
+        url: '/public/images/dopdang-og.png',
+        width: 1200,
+        height: 630,
+        alt: '돕당 전문가 매칭 플랫폼',
+      },
+    ],
+    locale: 'ko-KR',
+    type: 'website',
+  },
   description: 'Serve you the professional touch',
 };
 
