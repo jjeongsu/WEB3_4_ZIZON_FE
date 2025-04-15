@@ -68,9 +68,7 @@ export default function ChattingButtonGroup({
           }
 
           const result = await outResponse.text();
-          alert(result); // 서버에서 반환된 메시지 표시
 
-          // ['chatroomList'] 쿼리 무효화 및 새로고침
           queryClient.invalidateQueries({ queryKey: ['chatRoomList'] });
         } catch (error) {
           console.error('채팅방 나가기 요청 실패:', error);
@@ -96,15 +94,17 @@ export default function ChattingButtonGroup({
         size="full"
         state="default"
       />
-      <StandardButton
-        text="거래하기"
-        onClick={() => {
-          setOpenContract(true);
-        }}
-        disabled={false}
-        size="full"
-        state="blue"
-      />
+      {offerInfo && expertInfo && (
+        <StandardButton
+          text="거래하기"
+          onClick={() => {
+            setOpenContract(true);
+          }}
+          disabled={false}
+          size="full"
+          state="blue"
+        />
+      )}
       <ModalContainer open={openContract}>
         <ContractModal
           onClose={() => setOpenContract(false)}
