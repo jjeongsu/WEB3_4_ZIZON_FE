@@ -4,6 +4,7 @@
 
 돕당(DOPDANG)은 이사, 청소, 과외, 수리 등 다양한 분야의 전문가와 고객을 연결하는 프리랜서 매칭 플랫폼입니다. Next.js 15와 React 19를 기반으로 개발되었으며, 최신 웹 개발 기술과 모던 UI/UX를 적용하여 최적화된 사용자 경험을 제공합니다.
 
+소개 노션 링크: <a src="https://www.notion.so/Dopdang-1d644bbc09c880c7ad25df3af7e68947?pvs=4">https://www.notion.so/Dopdang-1d644bbc09c880c7ad25df3af7e68947?pvs=4</a>
 ## 👥 돕당 팀 소개
 
 ### Front-End
