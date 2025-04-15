@@ -7,8 +7,18 @@ interface GetExpertReviewsParams extends HTTPParams {
   size?: number;
 }
 
+export interface ExpertReview {
+  reviewId: number;
+  score: number;
+  content: string;
+  imageUrl: string;
+  reviewerName: string;
+  reviewerProfileImage: string;
+  createAt: string;
+}
+
 interface GetExpertReviewsResponse {
-  reviews: Review[];
+  reviews: ExpertReview[];
   currentPage: number;
   size: number;
   hasNext: boolean;
