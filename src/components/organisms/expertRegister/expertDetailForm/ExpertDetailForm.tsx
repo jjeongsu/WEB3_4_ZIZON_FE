@@ -211,7 +211,10 @@ function ExpertDetailForm({ onSubmit, setPortfolioImageFile }: ExpertDetailFormP
                 type="text"
                 placeholder="계좌번호"
                 value={formData.accountNumber}
-                onChange={value => setFormData(prev => ({ ...prev, accountNumber: value }))}
+                onChange={value => {
+                  const numericValue = value.replace(/[^0-9]/g, '');
+                  setFormData(prev => ({ ...prev, accountNumber: numericValue }));
+                }}
               />
             </div>
           </div>

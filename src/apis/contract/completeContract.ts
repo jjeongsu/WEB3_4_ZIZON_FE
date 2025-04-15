@@ -11,12 +11,20 @@ import { APIBuilder } from '@/utils/APIBuilder';
  * @throws {Error} 401 - 접근 권한이 없음
  * @throws {Error} 404 - 계약을 찾을 수 없음
  */
-export const completeContract = async (contractId: number): Promise<void> => {
-  await APIBuilder.patch(`/contracts/${contractId}/complete`, {})
+
+interface CompleteContractResponse {
+  contractId: number;
+  message: string;
+}
+
+export const completeContract = async (contractId: number): Promise<CompleteContractResponse> => {
+  const response = await APIBuilder.patch(`/contracts/${contractId}/complete`, {})
     .headers({
       'Content-Type': 'application/json',
     })
     .timeout(10000)
     .build()
-    .call<void>();
+    .call<CompleteContractResponse>();
+
+  return response.data;
 };
