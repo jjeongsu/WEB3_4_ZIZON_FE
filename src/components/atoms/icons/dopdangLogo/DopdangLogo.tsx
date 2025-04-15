@@ -14,17 +14,17 @@ const logoStyles: Record<
   }
 > = {
   kr: {
-    src: '/logo/dopdang-logo-kr.svg',
-    width: 61,
+    src: '/logo/dopdang-logo-kr.webp',
+    width: 100,
     height: 32,
   },
   en: {
-    src: '/logo/dopdang-logo-en.svg',
+    src: '/logo/dopdang-logo-en.webp',
     width: 221,
     height: 36,
   },
   signup: {
-    src: '/logo/dopdang-logo-signup.svg',
+    src: '/logo/dopdang-logo-signup.webp',
     width: 180,
     height: 36,
   },

@@ -14,13 +14,13 @@ function ExpertListItem({ expert }: { expert: ExpertListItemType }) {
   return (
     <article className="w-410 flex flex-col p-24 bg-black1 rounded-[20px] border-2 border-black1 hover:border-primary3 transition-all duration-300">
       <div className="flex flex-col mb-32">
-        <div className="w-full h-240 mb-16 rounded-xl overflow-hidden">
+        <div className="w-362 h-240 mb-16 rounded-xl overflow-hidden">
           <Image
             src={expert.profileImage || '/images/DefaultImage.png'}
             alt="expert"
             width={362}
             height={240}
-            className="object-cover"
+            className="size-full object-cover"
           />
         </div>
         <div className="flex gap-8 mb-16">
