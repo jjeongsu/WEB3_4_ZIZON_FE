@@ -3,7 +3,7 @@ import { ChangeEvent } from 'react';
 export interface NumberInputProps {
   id: string;
   placeholder: string;
-  value: number;
+  value: number | null;
   onChange: (value: number) => void;
   color?: 'transparent' | 'white';
   error?: boolean;
