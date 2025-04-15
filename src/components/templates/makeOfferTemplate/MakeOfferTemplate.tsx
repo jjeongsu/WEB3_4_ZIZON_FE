@@ -27,7 +27,7 @@ export default function MakeOfferTemplate({ projectSummary, hasChat }: MakeOffer
       } else {
         try {
           const response = await postCreateRoom(projectId);
-          alert('전문가와 채팅방이 생성되었습니다. 채팅방으로 이동합니다.');
+          alert('채팅방이 생성되었습니다. 채팅방으로 이동합니다.');
           router.push('/expert/chat');
         } catch (error) {
           alert(`채팅방 생성 실패 ${error}`);

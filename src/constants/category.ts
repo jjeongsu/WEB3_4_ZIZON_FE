@@ -2,7 +2,7 @@ export const PROJECT_CATEGORY = {
   1000: '이사/청소',
   2000: '설치/수리',
   3000: '과외',
-  4000: '취미/자기계발',
+  4000: '취미생활',
 };
 export type ProjectCategoryIdType = keyof typeof PROJECT_CATEGORY;
 export type ProjectCategoryValueType = (typeof PROJECT_CATEGORY)[ProjectCategoryIdType];
