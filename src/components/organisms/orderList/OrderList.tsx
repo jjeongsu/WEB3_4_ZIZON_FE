@@ -10,7 +10,7 @@ type OrderItemType = Project | Contract;
 interface OrderListProps {
   orders: OrderItemType[];
   onAskButtonClick: (orderId: number) => void;
-  onClickProject: (id: number) => void;
+  onClickProject?: (id: number) => void;
   isExpertView?: boolean;
 }
 
