@@ -2,15 +2,28 @@
 
 import { loadTossPayments, TossPaymentsPayment } from '@tosspayments/tosspayments-sdk';
 
-import { PaymentResponseType } from '@/apis/payment/postPayment';
+import {
+  PaymentResponseType,
+  ProjectPaymentResponseType,
+  StorePaymentResponseType,
+} from '@/apis/payment/postPayment';
 import { useEffect, useState } from 'react';
 
-export default function PaymentButton({ paymentInfo }: { paymentInfo: PaymentResponseType }) {
+export default function PaymentButton({
+  paymentInfo,
+  type,
+}: {
+  paymentInfo: PaymentResponseType;
+  type: string;
+}) {
   const [payment, setPayment] = useState<TossPaymentsPayment | null>(null);
 
   const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
   const customerKey = paymentInfo.customerKey;
-
+  const price =
+    type === 'PROJECT'
+      ? (paymentInfo as ProjectPaymentResponseType).price
+      : (paymentInfo as StorePaymentResponseType).totalPrice;
   useEffect(() => {
     async function fetchPayment() {
       try {
@@ -48,7 +61,7 @@ export default function PaymentButton({ paymentInfo }: { paymentInfo: PaymentRes
       orderId: paymentInfo.orderId, // 주문번호
       amount: {
         currency: 'KRW',
-        value: paymentInfo.price,
+        value: price, // 결제 금액
       },
       orderName: paymentInfo.title, // 구매상품
       successUrl: `${window.location.origin}/payments/success`, // 결제 성공 시  URL -> ✅ SUCCESS 결제창 열림
