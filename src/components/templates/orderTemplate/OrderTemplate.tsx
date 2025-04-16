@@ -14,10 +14,11 @@ import { PROJECT_CATEGORY } from '@/constants/category';
 interface OrderTemplateProps {
   paymentType: string;
   data: PaymentResponseType;
+  quantity: number;
 }
 
 // 📁 프로젝트 주문서
-const ProjectPaymentInformation = (data: ProjectPaymentResponseType) => {
+const ProjectPaymentInformation = (data: ProjectPaymentResponseType, quantity: number) => {
   const categoryName = PROJECT_CATEGORY[data.categoryId];
   return (
     <div className="w-full flex flex-col gap-32">
@@ -56,7 +57,7 @@ const ProjectPaymentInformation = (data: ProjectPaymentResponseType) => {
 };
 
 // 🎁 스토어 주문서
-const StorePaymentInformation = (data: StorePaymentResponseType) => {
+const StorePaymentInformation = (data: StorePaymentResponseType, quantity: number) => {
   return (
     <div className="w-full flex flex-col gap-32">
       <OrderInfoList
@@ -70,6 +71,10 @@ const StorePaymentInformation = (data: StorePaymentResponseType) => {
             attribute: '판매자',
             value: data.sellerName,
           },
+          {
+            attribute: '구매 수량',
+            value: quantity.toString(),
+          },
         ]}
       />
       <ChargeInfo serviceFee={data.price} totalPrice={data.totalPrice} />
@@ -77,7 +82,7 @@ const StorePaymentInformation = (data: StorePaymentResponseType) => {
   );
 };
 
-export default function OrderTemplate({ paymentType, data }: OrderTemplateProps) {
+export default function OrderTemplate({ paymentType, data, quantity }: OrderTemplateProps) {
   return (
     <div className="w-full flex flex-col items-start gap-40 relative">
       {/* 제목*/}
@@ -86,13 +91,13 @@ export default function OrderTemplate({ paymentType, data }: OrderTemplateProps)
       {/* 주문 정보 */}
       <div className="w-full flex flex-col gap-32">
         {paymentType === 'PROJECT'
-          ? ProjectPaymentInformation(data as ProjectPaymentResponseType)
-          : StorePaymentInformation(data as StorePaymentResponseType)}
+          ? ProjectPaymentInformation(data as ProjectPaymentResponseType, quantity)
+          : StorePaymentInformation(data as StorePaymentResponseType, quantity)}
       </div>
 
       {/* 결제하기 버튼 */}
       <div className="w-193 absolute right-0 bottom-[-80px]">
-        <PaymentButton paymentInfo={data} />
+        <PaymentButton paymentInfo={data} type={paymentType} />
       </div>
     </div>
   );
